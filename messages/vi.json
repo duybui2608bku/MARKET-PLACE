@@ -226,6 +226,7 @@
     "hourlyRate": "Giá Theo Giờ",
     "dailyRate": "Giá Theo Ngày",
     "monthlyRate": "Giá Theo Tháng",
+    "minimumBookingHours": "Yêu cầu đặt tối thiểu {hours} giờ",
     "experience": "Kinh Nghiệm",
     "years": "năm",
     "responseTime": "Thời Gian Phản Hồi",

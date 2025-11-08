@@ -226,6 +226,7 @@
     "hourlyRate": "시간당 가격",
     "dailyRate": "일당 가격",
     "monthlyRate": "월당 가격",
+    "minimumBookingHours": "최소 {hours}시간 예약 필요",
     "experience": "경력",
     "years": "년",
     "responseTime": "응답 시간",

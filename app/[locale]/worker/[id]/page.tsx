@@ -36,6 +36,7 @@ export default function WorkerProfileDetailPage() {
   });
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
 
   useEffect(() => {
     loadWorkerProfile();
@@ -507,92 +508,257 @@ export default function WorkerProfileDetailPage() {
                       ? t("PublicProfile.assistance")
                       : t("PublicProfile.companionship")}{" "}
                     •{" "}
-                    {profile.service_category ||
-                      `Level ${profile.service_level}`}
+                    {(profile.service_categories && profile.service_categories.length > 0)
+                      ? profile.service_categories.map(cat => cat.replace(/_/g, " ")).join(", ")
+                      : profile.service_category
+                      ? profile.service_category.replace(/_/g, " ")
+                      : `Level ${profile.service_level}`}
                   </p>
                 )}
               </div>
 
-              {/* Pricing */}
-              {profile.hourly_rate && (
-                <div className="space-y-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">
-                  <h4 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                    {t("PublicProfile.pricing")}
-                  </h4>
-                  <div className="space-y-2">
+              {/* Service Cards with Pricing - Slider if multiple services */}
+              {(() => {
+                // Get services with pricing
+                const services = profile.service_categories && profile.service_categories.length > 0
+                  ? profile.service_categories
+                  : profile.service_category
+                  ? [profile.service_category]
+                  : [];
+
+                const servicePricing = profile.service_pricing || {};
+                const hasMultipleServices = services.length > 1;
+
+                if (services.length === 0 && !profile.hourly_rate) return null;
+
+                const categoryNames: Record<string, string> = {
+                  personal_assist: "Hỗ Trợ Cá Nhân",
+                  professional_onsite_assist: "Hỗ Trợ Chuyên Nghiệp",
+                  virtual_assist: "Hỗ Trợ Từ Xa",
+                  tour_guide: "Hướng Dẫn Viên",
+                  translator: "Phiên Dịch",
+                };
+
+                return (
+                  <div className="space-y-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
-                      </div>
-                      <p className="text-xl font-bold text-black dark:text-white">
-                        {formatCurrency(profile.hourly_rate, profile.currency)}
-                      </p>
+                      <h4 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                        {t("PublicProfile.pricing")}
+                      </h4>
+                      {hasMultipleServices && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setCurrentServiceIndex((prev) => Math.max(0, prev - 1))}
+                            disabled={currentServiceIndex === 0}
+                            className="rounded-lg p-1.5 text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed dark:text-zinc-400 dark:hover:bg-zinc-800"
+                          >
+                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </button>
+                          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                            {currentServiceIndex + 1} / {services.length}
+                          </span>
+                          <button
+                            onClick={() => setCurrentServiceIndex((prev) => Math.min(services.length - 1, prev + 1))}
+                            disabled={currentServiceIndex === services.length - 1}
+                            className="rounded-lg p-1.5 text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed dark:text-zinc-400 dark:hover:bg-zinc-800"
+                          >
+                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    {profile.daily_rate && (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
-                        </div>
-                        <p className="text-xl font-bold text-black dark:text-white">
-                          {formatCurrency(profile.daily_rate, profile.currency)}
-                        </p>
+
+                    {/* Service Cards Container */}
+                    <div className="relative w-full overflow-hidden">
+                      <div
+                        className="flex transition-transform duration-300 ease-in-out"
+                        style={{
+                          transform: hasMultipleServices
+                            ? `translateX(-${currentServiceIndex * 100}%)`
+                            : "translateX(0)",
+                        }}
+                      >
+                        {services.map((serviceCategory, index) => {
+                          const pricing = servicePricing[serviceCategory] || {
+                            hourly_rate: profile.hourly_rate || 0,
+                            daily_rate: profile.daily_rate || 0,
+                            monthly_rate: profile.monthly_rate || 0,
+                            min_booking_hours: profile.min_booking_hours || 2,
+                          };
+
+                          return (
+                            <div
+                              key={serviceCategory}
+                              className="w-full flex-shrink-0 space-y-2 px-1"
+                              style={{
+                                minWidth: "100%",
+                                maxWidth: "100%",
+                              }}
+                            >
+                              {hasMultipleServices && (
+                                <p className="mb-2 text-sm font-medium text-black dark:text-white">
+                                  {categoryNames[serviceCategory] || serviceCategory.replace(/_/g, " ")}
+                                </p>
+                              )}
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                                    <svg
+                                      className="h-5 w-5"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      />
+                                    </svg>
+                                    <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
+                                  </div>
+                                  <p className="text-xl font-bold text-black dark:text-white">
+                                    {formatCurrency(pricing.hourly_rate, profile.currency)}
+                                  </p>
+                                </div>
+                                {pricing.daily_rate > 0 && (
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                                      <svg
+                                        className="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                      </svg>
+                                      <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
+                                    </div>
+                                    <p className="text-xl font-bold text-black dark:text-white">
+                                      {formatCurrency(pricing.daily_rate, profile.currency)}
+                                    </p>
+                                  </div>
+                                )}
+                                {pricing.monthly_rate > 0 && (
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                                      <svg
+                                        className="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                      </svg>
+                                      <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
+                                    </div>
+                                    <p className="text-xl font-bold text-black dark:text-white">
+                                      {formatCurrency(pricing.monthly_rate, profile.currency)}
+                                    </p>
+                                  </div>
+                                )}
+                                {pricing.min_booking_hours > 0 && (
+                                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                    {t("PublicProfile.minimumBookingHours").replace("{hours}", pricing.min_booking_hours.toString())}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                    )}
-                    {profile.monthly_rate && (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
+                    </div>
+
+                    {/* Fallback for legacy single pricing */}
+                    {services.length === 0 && profile.hourly_rate && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
+                          </div>
+                          <p className="text-xl font-bold text-black dark:text-white">
+                            {formatCurrency(profile.hourly_rate, profile.currency)}
+                          </p>
                         </div>
-                        <p className="text-xl font-bold text-black dark:text-white">
-                          {formatCurrency(
-                            profile.monthly_rate,
-                            profile.currency
-                          )}
-                        </p>
+                        {profile.daily_rate && (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                              <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                              <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
+                            </div>
+                            <p className="text-xl font-bold text-black dark:text-white">
+                              {formatCurrency(profile.daily_rate, profile.currency)}
+                            </p>
+                          </div>
+                        )}
+                        {profile.monthly_rate && (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                              <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                              <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
+                            </div>
+                            <p className="text-xl font-bold text-black dark:text-white">
+                              {formatCurrency(profile.monthly_rate, profile.currency)}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Additional Info */}
               <div className="mt-4 space-y-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">

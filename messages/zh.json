@@ -226,6 +226,7 @@
     "hourlyRate": "每小时价格",
     "dailyRate": "每天价格",
     "monthlyRate": "每月价格",
+    "minimumBookingHours": "最少预订 {hours} 小时",
     "experience": "经验",
     "years": "年",
     "responseTime": "响应时间",

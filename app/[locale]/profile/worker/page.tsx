@@ -386,43 +386,128 @@ export default function WorkerProfilePage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Pricing Card */}
-            {profile.hourly_rate && (
-              <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-                <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  {t("WorkerProfile.pricing")}
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.hourly")}</span>
-                    <span className="text-lg font-bold text-black dark:text-white">
-                      {formatCurrency(profile.hourly_rate, profile.currency)}
-                    </span>
+            {/* Pricing Card - Show all services with individual pricing */}
+            {(() => {
+              // Get services with pricing
+              const services = profile.service_categories && profile.service_categories.length > 0
+                ? profile.service_categories
+                : profile.service_category
+                ? [profile.service_category]
+                : [];
+
+              const servicePricing = profile.service_pricing || {};
+              const hasServices = services.length > 0 || profile.hourly_rate;
+
+              if (!hasServices) return null;
+
+              const categoryNames: Record<string, string> = {
+                personal_assist: "Hỗ Trợ Cá Nhân",
+                professional_onsite_assist: "Hỗ Trợ Chuyên Nghiệp",
+                virtual_assist: "Hỗ Trợ Từ Xa",
+                tour_guide: "Hướng Dẫn Viên",
+                translator: "Phiên Dịch",
+              };
+
+              return (
+                <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+                  <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
+                    {t("WorkerProfile.pricing")}
+                  </h3>
+                  <div className="space-y-6">
+                    {services.length > 0 ? (
+                      // Show pricing for each service
+                      services.map((serviceCategory) => {
+                        const pricing = servicePricing[serviceCategory] || {
+                          hourly_rate: profile.hourly_rate || 0,
+                          daily_rate: profile.daily_rate || 0,
+                          monthly_rate: profile.monthly_rate || 0,
+                          min_booking_hours: profile.min_booking_hours || 2,
+                        };
+
+                        return (
+                          <div
+                            key={serviceCategory}
+                            className="rounded-lg border border-black/5 bg-zinc-50 p-4 dark:border-white/10 dark:bg-zinc-900/50"
+                          >
+                            <h4 className="mb-3 text-base font-semibold text-black dark:text-white">
+                              {categoryNames[serviceCategory] || serviceCategory.replace(/_/g, " ")}
+                            </h4>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                  {t("WorkerProfile.hourly")}:
+                                </span>
+                                <span className="text-base font-semibold text-black dark:text-white">
+                                  {formatCurrency(pricing.hourly_rate, profile.currency)}
+                                </span>
+                              </div>
+                              {pricing.daily_rate > 0 && (
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                    {t("WorkerProfile.daily")}:
+                                  </span>
+                                  <span className="text-base font-semibold text-black dark:text-white">
+                                    {formatCurrency(pricing.daily_rate, profile.currency)}
+                                  </span>
+                                </div>
+                              )}
+                              {pricing.monthly_rate > 0 && (
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                    {t("WorkerProfile.monthly")}:
+                                  </span>
+                                  <span className="text-base font-semibold text-black dark:text-white">
+                                    {formatCurrency(pricing.monthly_rate, profile.currency)}
+                                  </span>
+                                </div>
+                              )}
+                              {pricing.min_booking_hours > 0 && (
+                                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
+                                  {t("WorkerProfile.minimumBookingHours").replace("{hours}", pricing.min_booking_hours.toString())}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      // Fallback for legacy single pricing
+                      profile.hourly_rate && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.hourly")}</span>
+                            <span className="text-lg font-bold text-black dark:text-white">
+                              {formatCurrency(profile.hourly_rate, profile.currency)}
+                            </span>
+                          </div>
+                          {profile.daily_rate && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.daily")}</span>
+                              <span className="text-lg font-bold text-black dark:text-white">
+                                {formatCurrency(profile.daily_rate, profile.currency)}
+                              </span>
+                            </div>
+                          )}
+                          {profile.monthly_rate && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.monthly")}</span>
+                              <span className="text-lg font-bold text-black dark:text-white">
+                                {formatCurrency(profile.monthly_rate, profile.currency)}
+                              </span>
+                            </div>
+                          )}
+                          {profile.min_booking_hours && (
+                            <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-500">
+                              {t("WorkerProfile.minimumBookingHours").replace("{hours}", profile.min_booking_hours.toString())}
+                            </p>
+                          )}
+                        </div>
+                      )
+                    )}
                   </div>
-                  {profile.daily_rate && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.daily")}</span>
-                      <span className="text-lg font-bold text-black dark:text-white">
-                        {formatCurrency(profile.daily_rate, profile.currency)}
-                      </span>
-                    </div>
-                  )}
-                  {profile.monthly_rate && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.monthly")}</span>
-                      <span className="text-lg font-bold text-black dark:text-white">
-                        {formatCurrency(profile.monthly_rate, profile.currency)}
-                      </span>
-                    </div>
-                  )}
                 </div>
-                {profile.min_booking_hours && (
-                  <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-500">
-                    {t("WorkerProfile.minimumBookingHours").replace("{hours}", profile.min_booking_hours.toString())}
-                  </p>
-                )}
-              </div>
-            )}
+              );
+            })()}
 
             {/* Service Info */}
             {profile.service_type && (
@@ -437,7 +522,16 @@ export default function WorkerProfilePage() {
                       {profile.service_type}
                     </span>
                   </div>
-                  {profile.service_category && (
+                  {(profile.service_categories && profile.service_categories.length > 0) && (
+                    <div className="flex justify-between">
+                      <span className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.category")}:</span>
+                      <span className="font-medium text-black dark:text-white">
+                        {profile.service_categories.map(cat => cat.replace(/_/g, " ")).join(", ")}
+                      </span>
+                    </div>
+                  )}
+                  {/* Fallback to legacy service_category */}
+                  {(!profile.service_categories || profile.service_categories.length === 0) && profile.service_category && (
                     <div className="flex justify-between">
                       <span className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.category")}:</span>
                       <span className="font-medium text-black dark:text-white">

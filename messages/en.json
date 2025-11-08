@@ -226,6 +226,7 @@
     "hourlyRate": "Hourly Rate",
     "dailyRate": "Daily Rate",
     "monthlyRate": "Monthly Rate",
+    "minimumBookingHours": "Minimum {hours} hours booking required",
     "experience": "Experience",
     "years": "years",
     "responseTime": "Response Time",

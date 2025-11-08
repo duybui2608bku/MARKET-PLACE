@@ -53,7 +53,8 @@ export interface WorkerProfile {
   
   // Service fields
   service_type: string | null;
-  service_category: string | null;
+  service_category: string | null; // Legacy field, kept for backward compatibility
+  service_categories: string[] | null; // Array of service categories (multiple selections)
   service_level: number | null;
   service_description: string | null;
   service_languages: string[] | null;
@@ -67,6 +68,12 @@ export interface WorkerProfile {
   min_booking_hours: number;
   daily_rate: number | null;
   monthly_rate: number | null;
+  service_pricing: Record<string, {
+    hourly_rate: number;
+    daily_rate: number;
+    monthly_rate: number;
+    min_booking_hours: number;
+  }> | null; // Per-service pricing JSONB
   
   // Setup tracking
   setup_step: number;

@@ -50,16 +50,25 @@ interface Step1Data {
 interface Step2Data {
   gallery_images: string[];
   service_type: ServiceType | "";
-  service_category: AssistanceCategory | "";
+  service_categories: AssistanceCategory[]; // Changed to array for multiple selections
   service_level: CompanionshipLevel | "";
   service_languages: string[];
 }
 
+interface ServicePricing {
+  hourly_rate: string;
+  daily_rate: string;
+  monthly_rate: string;
+  min_booking_hours: number;
+}
+
 interface Step3Data {
   currency: "USD" | "VND" | "EUR" | "JPY" | "KRW" | "CNY";
+  service_pricing: Record<string, ServicePricing>; // Pricing for each service category
+  service_images: string[];
+  // Legacy fields for backward compatibility
   hourly_rate: string;
   min_booking_hours: number;
-  service_images: string[];
 }
 
 const ZODIAC_SIGNS: ZodiacSign[] = [
@@ -121,7 +130,7 @@ export default function WorkerOnboardingPage() {
   const [step2Data, setStep2Data] = useState<Step2Data>({
     gallery_images: [],
     service_type: "",
-    service_category: "",
+    service_categories: [], // Changed to array
     service_level: "",
     service_languages: [],
   });
@@ -131,9 +140,11 @@ export default function WorkerOnboardingPage() {
   // Step 3 state
   const [step3Data, setStep3Data] = useState<Step3Data>({
     currency: "USD",
+    service_pricing: {}, // Pricing for each service category
+    service_images: [],
+    // Legacy fields
     hourly_rate: "",
     min_booking_hours: 2,
-    service_images: [],
   });
 
   useEffect(() => {
@@ -192,16 +203,34 @@ export default function WorkerOnboardingPage() {
         setStep2Data({
           gallery_images: profileData.gallery_images || [],
           service_type: profileData.service_type || "",
-          service_category: profileData.service_category || "",
+          service_categories: profileData.service_categories || 
+            (profileData.service_category ? [profileData.service_category] : []), // Migrate old data
           service_level: profileData.service_level || "",
           service_languages: profileData.service_languages || [],
         });
 
+        // Load service_pricing from JSONB or migrate from legacy fields
+        let servicePricing: Record<string, ServicePricing> = {};
+        if (profileData.service_pricing && typeof profileData.service_pricing === 'object') {
+          servicePricing = profileData.service_pricing as Record<string, ServicePricing>;
+        } else if (profileData.service_category && profileData.hourly_rate) {
+          // Migrate legacy pricing
+          const hourly = profileData.hourly_rate;
+          servicePricing[profileData.service_category] = {
+            hourly_rate: hourly.toString(),
+            daily_rate: (hourly * 8).toString(),
+            monthly_rate: (hourly * 160).toString(),
+            min_booking_hours: profileData.min_booking_hours || 2,
+          };
+        }
+
         setStep3Data({
           currency: profileData.currency || "USD",
+          service_pricing: servicePricing,
+          service_images: profileData.service_images || [],
+          // Legacy fields
           hourly_rate: profileData.hourly_rate?.toString() || "",
           min_booking_hours: profileData.min_booking_hours || 2,
-          service_images: profileData.service_images || [],
         });
 
         // Set current step
@@ -339,9 +368,9 @@ export default function WorkerOnboardingPage() {
 
     if (
       step2Data.service_type === "assistance" &&
-      !step2Data.service_category
+      step2Data.service_categories.length === 0
     ) {
-      setError("Please select a service category");
+      setError("Please select at least one service category");
       return;
     }
 
@@ -363,16 +392,16 @@ export default function WorkerOnboardingPage() {
         .update({
           gallery_images: step2Data.gallery_images,
           service_type: step2Data.service_type,
-          service_category:
+          service_categories:
             step2Data.service_type === "assistance"
-              ? step2Data.service_category
-              : null,
+              ? step2Data.service_categories
+              : [],
           service_level:
             step2Data.service_type === "companionship"
               ? step2Data.service_level
               : null,
           service_languages:
-            step2Data.service_category === "translator"
+            step2Data.service_categories.includes("translator")
               ? step2Data.service_languages
               : [],
           setup_step: 3,
@@ -391,25 +420,66 @@ export default function WorkerOnboardingPage() {
   };
 
   // Step 3 handlers
-  const calculateDailyRate = () => {
-    const hourly = parseFloat(step3Data.hourly_rate);
+  const calculateDailyRate = (hourlyRate: string) => {
+    const hourly = parseFloat(hourlyRate);
     if (isNaN(hourly)) return "0.00";
     return (hourly * 8).toFixed(2);
   };
 
-  const calculateMonthlyRate = () => {
-    const hourly = parseFloat(step3Data.hourly_rate);
+  const calculateMonthlyRate = (hourlyRate: string) => {
+    const hourly = parseFloat(hourlyRate);
     if (isNaN(hourly)) return "0.00";
     return (hourly * 160).toFixed(2);
+  };
+
+  const updateServicePricing = (
+    serviceCategory: string,
+    field: keyof ServicePricing,
+    value: string | number
+  ) => {
+    setStep3Data({
+      ...step3Data,
+      service_pricing: {
+        ...step3Data.service_pricing,
+        [serviceCategory]: {
+          ...(step3Data.service_pricing[serviceCategory] || {
+            hourly_rate: "",
+            daily_rate: "",
+            monthly_rate: "",
+            min_booking_hours: 2,
+          }),
+          [field]: value,
+          // Auto-calculate daily and monthly when hourly_rate changes
+          ...(field === "hourly_rate" && typeof value === "string"
+            ? {
+                daily_rate: calculateDailyRate(value),
+                monthly_rate: calculateMonthlyRate(value),
+              }
+            : {}),
+        },
+      },
+    });
   };
 
   const handleStep3Submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!step3Data.hourly_rate || parseFloat(step3Data.hourly_rate) <= 0) {
-      setError("Please enter a valid hourly rate");
-      return;
+    // Validate that all selected services have pricing
+    if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+      for (const category of step2Data.service_categories) {
+        const pricing = step3Data.service_pricing[category];
+        if (!pricing || !pricing.hourly_rate || parseFloat(pricing.hourly_rate) <= 0) {
+          setError(`Please enter pricing for ${category.replace(/_/g, " ")}`);
+          return;
+        }
+      }
+    } else if (step2Data.service_type === "companionship") {
+      // For companionship, use legacy hourly_rate if no service_pricing
+      if (!step3Data.hourly_rate || parseFloat(step3Data.hourly_rate) <= 0) {
+        setError("Please enter a valid hourly rate");
+        return;
+      }
     }
 
     setSaving(true);
@@ -417,12 +487,44 @@ export default function WorkerOnboardingPage() {
     try {
       if (!userId) return;
 
+      // Build service_pricing JSONB object
+      const servicePricingJson: Record<string, any> = {};
+      if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+        for (const category of step2Data.service_categories) {
+          const pricing = step3Data.service_pricing[category];
+          if (pricing) {
+            servicePricingJson[category] = {
+              hourly_rate: parseFloat(pricing.hourly_rate),
+              daily_rate: parseFloat(pricing.daily_rate),
+              monthly_rate: parseFloat(pricing.monthly_rate),
+              min_booking_hours: pricing.min_booking_hours,
+            };
+          }
+        }
+      }
+
+      // For backward compatibility, also set hourly_rate to the first service's rate
+      // or use legacy hourly_rate for companionship
+      let legacyHourlyRate = null;
+      if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+        const firstCategory = step2Data.service_categories[0];
+        const firstPricing = step3Data.service_pricing[firstCategory];
+        if (firstPricing) {
+          legacyHourlyRate = parseFloat(firstPricing.hourly_rate);
+        }
+      } else if (step2Data.service_type === "companionship") {
+        legacyHourlyRate = parseFloat(step3Data.hourly_rate);
+      }
+
       const { error: profileError } = await supabase
         .from("worker_profiles")
         .update({
           currency: step3Data.currency,
-          hourly_rate: parseFloat(step3Data.hourly_rate),
-          min_booking_hours: step3Data.min_booking_hours,
+          service_pricing: servicePricingJson,
+          hourly_rate: legacyHourlyRate, // Keep for backward compatibility
+          min_booking_hours: step2Data.service_type === "assistance" && step2Data.service_categories.length > 0
+            ? step3Data.service_pricing[step2Data.service_categories[0]]?.min_booking_hours || 2
+            : step3Data.min_booking_hours,
           service_images: step3Data.service_images,
           setup_step: 4,
           setup_completed: true,
@@ -874,7 +976,7 @@ export default function WorkerOnboardingPage() {
                     setStep2Data({
                       ...step2Data,
                       service_type: e.target.value as ServiceType,
-                      service_category: "",
+                      service_categories: [],
                       service_level: "",
                     })
                   }
@@ -888,43 +990,142 @@ export default function WorkerOnboardingPage() {
                 </select>
               </div>
 
-              {/* Assistance Categories */}
+              {/* Assistance Categories - Card Select Style */}
               {step2Data.service_type === "assistance" && (
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Loại Hỗ Trợ <span className="text-red-500">*</span>
+                  <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Chọn loại dịch vụ bạn muốn cung cấp <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    required
-                    value={step2Data.service_category}
-                    onChange={(e) =>
-                      setStep2Data({
-                        ...step2Data,
-                        service_category: e.target.value as AssistanceCategory,
-                      })
-                    }
-                    className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-zinc-950 dark:text-white"
-                  >
-                    <option value="">Chọn loại hỗ trợ</option>
-                    <option value="personal_assist">
-                      Hỗ trợ cá nhân (Personal Assist)
-                    </option>
-                    <option value="professional_onsite_assist">
-                      Hỗ trợ chuyên nghiệp tại chỗ (Professional On-site Assist)
-                    </option>
-                    <option value="virtual_assist">
-                      Hỗ trợ từ xa (Virtual Assist)
-                    </option>
-                    <option value="tour_guide">
-                      Hướng dẫn viên du lịch (Tour Guide)
-                    </option>
-                    <option value="translator">Phiên dịch (Translator)</option>
-                  </select>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {[
+                      {
+                        value: "personal_assist" as AssistanceCategory,
+                        title: "Hỗ Trợ Cá Nhân",
+                        description: "Hỗ trợ hành chính và dịch thuật",
+                        icon: (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        ),
+                        color: "from-green-500 to-emerald-600",
+                        bgColor: "bg-green-50 dark:bg-green-950/20",
+                        borderColor: "border-green-300 dark:border-green-700",
+                      },
+                      {
+                        value: "professional_onsite_assist" as AssistanceCategory,
+                        title: "Hỗ Trợ Chuyên Nghiệp",
+                        description: "Hỗ trợ chuyên nghiệp tại chỗ",
+                        icon: (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        ),
+                        color: "from-blue-500 to-cyan-600",
+                        bgColor: "bg-blue-50 dark:bg-blue-950/20",
+                        borderColor: "border-blue-300 dark:border-blue-700",
+                      },
+                      {
+                        value: "virtual_assist" as AssistanceCategory,
+                        title: "Hỗ Trợ Từ Xa",
+                        description: "Hỗ trợ trực tuyến và từ xa",
+                        icon: (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        ),
+                        color: "from-purple-500 to-pink-600",
+                        bgColor: "bg-purple-50 dark:bg-purple-950/20",
+                        borderColor: "border-purple-300 dark:border-purple-700",
+                      },
+                      {
+                        value: "tour_guide" as AssistanceCategory,
+                        title: "Hướng Dẫn Viên",
+                        description: "Hướng dẫn du lịch và tham quan",
+                        icon: (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        ),
+                        color: "from-orange-500 to-red-600",
+                        bgColor: "bg-orange-50 dark:bg-orange-950/20",
+                        borderColor: "border-orange-300 dark:border-orange-700",
+                      },
+                      {
+                        value: "translator" as AssistanceCategory,
+                        title: "Phiên Dịch",
+                        description: "Dịch thuật và phiên dịch",
+                        icon: (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                          </svg>
+                        ),
+                        color: "from-indigo-500 to-violet-600",
+                        bgColor: "bg-indigo-50 dark:bg-indigo-950/20",
+                        borderColor: "border-indigo-300 dark:border-indigo-700",
+                      },
+                    ].map((category) => {
+                      const isSelected = step2Data.service_categories.includes(category.value);
+                      return (
+                        <button
+                          key={category.value}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setStep2Data({
+                                ...step2Data,
+                                service_categories: step2Data.service_categories.filter(
+                                  (c) => c !== category.value
+                                ),
+                                service_languages: category.value === "translator" 
+                                  ? [] 
+                                  : step2Data.service_languages,
+                              });
+                            } else {
+                              setStep2Data({
+                                ...step2Data,
+                                service_categories: [...step2Data.service_categories, category.value],
+                              });
+                            }
+                          }}
+                          className={`relative rounded-xl border-2 p-4 text-left transition-all hover:shadow-md ${
+                            isSelected
+                              ? `${category.borderColor} ${category.bgColor} border-2 shadow-sm`
+                              : "border-black/10 bg-white dark:border-white/15 dark:bg-zinc-900/50"
+                          }`}
+                        >
+                          {/* Checkmark indicator */}
+                          {isSelected && (
+                            <div className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br ${category.color} text-white`}>
+                              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          )}
+                          
+                          {/* Icon */}
+                          <div className={`mb-3 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${category.color} text-white`}>
+                            {category.icon}
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="mb-1 text-base font-semibold text-black dark:text-white">
+                            {category.title}
+                          </h3>
+                          
+                          {/* Description */}
+                          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                            {category.description}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
               {/* Translator Languages */}
-              {step2Data.service_category === "translator" && (
+              {step2Data.service_categories.includes("translator") && (
                 <div>
                   <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     Ngôn Ngữ Phiên Dịch
@@ -1107,100 +1308,204 @@ export default function WorkerOnboardingPage() {
                 </select>
               </div>
 
-              {/* Hourly Rate and Min Hours */}
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Giá Theo Giờ <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    step="0.01"
-                    min="0"
-                    value={step3Data.hourly_rate}
-                    onChange={(e) =>
-                      setStep3Data({
-                        ...step3Data,
-                        hourly_rate: e.target.value,
-                      })
-                    }
-                    placeholder="Nhập giá theo giờ"
-                    className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Số Giờ Đặt Tối Thiểu <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={step3Data.min_booking_hours}
-                    onChange={(e) =>
-                      setStep3Data({
-                        ...step3Data,
-                        min_booking_hours: parseInt(e.target.value),
-                      })
-                    }
-                    className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-zinc-950 dark:text-white"
-                  >
-                    <option value={2}>2 hours</option>
-                    <option value={3}>3 hours</option>
-                    <option value={4}>4 hours</option>
-                    <option value={5}>5 hours</option>
-                    <option value={6}>6 hours</option>
-                    <option value={8}>8 hours</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Auto-calculated Rates */}
-              <div className="space-y-3 rounded-xl bg-blue-50 p-4 dark:bg-blue-950/20">
-                <div className="flex items-center gap-2">
-                  <svg
-                    className="h-5 w-5 text-blue-600 dark:text-blue-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    Lưu ý: Khách hàng đặt nhiều dịch vụ sẽ được tính theo giá
-                    cao nhất của bạn.
-                  </p>
-                </div>
-
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      Giá Theo Ngày (8 giờ)
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-black dark:text-white">
-                      {CURRENCIES.find((c) => c.code === step3Data.currency)
-                        ?.symbol || "$"}
-                      {calculateDailyRate()}
+              {/* Per-Service Pricing for Assistance */}
+              {step2Data.service_type === "assistance" && step2Data.service_categories.length > 0 && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
+                      Đặt Giá Cho Từng Dịch Vụ
+                    </h3>
+                    <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                      Mỗi dịch vụ có thể có mức giá khác nhau. Vui lòng nhập giá cho từng dịch vụ bạn đã chọn.
                     </p>
                   </div>
 
-                  <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      Giá Theo Tháng (160 giờ)
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-black dark:text-white">
-                      {CURRENCIES.find((c) => c.code === step3Data.currency)
-                        ?.symbol || "$"}
-                      {calculateMonthlyRate()}
-                    </p>
-                  </div>
+                  {step2Data.service_categories.map((category) => {
+                    const categoryNames: Record<AssistanceCategory, string> = {
+                      personal_assist: "Hỗ Trợ Cá Nhân",
+                      professional_onsite_assist: "Hỗ Trợ Chuyên Nghiệp",
+                      virtual_assist: "Hỗ Trợ Từ Xa",
+                      tour_guide: "Hướng Dẫn Viên",
+                      translator: "Phiên Dịch",
+                    };
+
+                    const pricing = step3Data.service_pricing[category] || {
+                      hourly_rate: "",
+                      daily_rate: "",
+                      monthly_rate: "",
+                      min_booking_hours: 2,
+                    };
+
+                    return (
+                      <div
+                        key={category}
+                        className="rounded-xl border border-black/10 bg-zinc-50 p-6 dark:border-white/15 dark:bg-zinc-900/50"
+                      >
+                        <h4 className="mb-4 text-base font-semibold text-black dark:text-white">
+                          {categoryNames[category]}
+                        </h4>
+
+                        <div className="space-y-4">
+                          {/* Hourly Rate and Min Hours */}
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <div>
+                              <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                Giá Theo Giờ <span className="text-red-500">*</span>
+                              </label>
+                              <input
+                                type="number"
+                                required
+                                step="0.01"
+                                min="0"
+                                value={pricing.hourly_rate}
+                                onChange={(e) =>
+                                  updateServicePricing(category, "hourly_rate", e.target.value)
+                                }
+                                placeholder="Nhập giá theo giờ"
+                                className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                Số Giờ Đặt Tối Thiểu <span className="text-red-500">*</span>
+                              </label>
+                              <select
+                                required
+                                value={pricing.min_booking_hours}
+                                onChange={(e) =>
+                                  updateServicePricing(
+                                    category,
+                                    "min_booking_hours",
+                                    parseInt(e.target.value)
+                                  )
+                                }
+                                className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-zinc-950 dark:text-white"
+                              >
+                                <option value={2}>2 hours</option>
+                                <option value={3}>3 hours</option>
+                                <option value={4}>4 hours</option>
+                                <option value={5}>5 hours</option>
+                                <option value={6}>6 hours</option>
+                                <option value={8}>8 hours</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* Auto-calculated Rates */}
+                          {pricing.hourly_rate && (
+                            <div className="grid gap-3 md:grid-cols-2">
+                              <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
+                                <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                                  Giá Theo Ngày (8 giờ)
+                                </p>
+                                <p className="mt-1 text-lg font-semibold text-black dark:text-white">
+                                  {CURRENCIES.find((c) => c.code === step3Data.currency)
+                                    ?.symbol || "$"}
+                                  {calculateDailyRate(pricing.hourly_rate)}
+                                </p>
+                              </div>
+
+                              <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
+                                <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                                  Giá Theo Tháng (160 giờ)
+                                </p>
+                                <p className="mt-1 text-lg font-semibold text-black dark:text-white">
+                                  {CURRENCIES.find((c) => c.code === step3Data.currency)
+                                    ?.symbol || "$"}
+                                  {calculateMonthlyRate(pricing.hourly_rate)}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
+              )}
+
+              {/* Legacy Pricing for Companionship */}
+              {step2Data.service_type === "companionship" && (
+                <>
+                  {/* Hourly Rate and Min Hours */}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        Giá Theo Giờ <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        step="0.01"
+                        min="0"
+                        value={step3Data.hourly_rate}
+                        onChange={(e) =>
+                          setStep3Data({
+                            ...step3Data,
+                            hourly_rate: e.target.value,
+                          })
+                        }
+                        placeholder="Nhập giá theo giờ"
+                        className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        Số Giờ Đặt Tối Thiểu <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        required
+                        value={step3Data.min_booking_hours}
+                        onChange={(e) =>
+                          setStep3Data({
+                            ...step3Data,
+                            min_booking_hours: parseInt(e.target.value),
+                          })
+                        }
+                        className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-white/15 dark:bg-zinc-950 dark:text-white"
+                      >
+                        <option value={2}>2 hours</option>
+                        <option value={3}>3 hours</option>
+                        <option value={4}>4 hours</option>
+                        <option value={5}>5 hours</option>
+                        <option value={6}>6 hours</option>
+                        <option value={8}>8 hours</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Auto-calculated Rates */}
+                  {step3Data.hourly_rate && (
+                    <div className="space-y-3 rounded-xl bg-blue-50 p-4 dark:bg-blue-950/20">
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                            Giá Theo Ngày (8 giờ)
+                          </p>
+                          <p className="mt-1 text-lg font-semibold text-black dark:text-white">
+                            {CURRENCIES.find((c) => c.code === step3Data.currency)
+                              ?.symbol || "$"}
+                            {calculateDailyRate(step3Data.hourly_rate)}
+                          </p>
+                        </div>
+
+                        <div className="rounded-lg bg-white p-3 dark:bg-zinc-900">
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                            Giá Theo Tháng (160 giờ)
+                          </p>
+                          <p className="mt-1 text-lg font-semibold text-black dark:text-white">
+                            {CURRENCIES.find((c) => c.code === step3Data.currency)
+                              ?.symbol || "$"}
+                            {calculateMonthlyRate(step3Data.hourly_rate)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Service Images */}
               <MultiImageUpload
