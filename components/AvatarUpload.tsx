@@ -2,6 +2,7 @@
 
 import { useState, useRef, ChangeEvent } from "react";
 import Image from "next/image";
+import { useT } from "@/i18n/provider";
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string | null;
@@ -16,6 +17,7 @@ export default function AvatarUpload({
   onUploadError,
   size = "md",
 }: AvatarUploadProps) {
+  const t = useT();
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -30,13 +32,13 @@ export default function AvatarUpload({
   const handleFileSelect = async (file: File) => {
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      onUploadError?.("Vui lòng chọn file ảnh (JPG, PNG, GIF)");
+      onUploadError?.(t("AvatarUpload.invalidFileType"));
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      onUploadError?.("Kích thước file không được vượt quá 5MB");
+      onUploadError?.(t("AvatarUpload.fileTooLarge"));
       return;
     }
 
@@ -75,7 +77,7 @@ export default function AvatarUpload({
     } catch (error) {
       console.error("Upload error:", error);
       onUploadError?.(
-        error instanceof Error ? error.message : "Upload thất bại"
+        error instanceof Error ? error.message : t("AvatarUpload.uploadFailed")
       );
       setPreview(null);
     } finally {
@@ -210,17 +212,17 @@ export default function AvatarUpload({
         className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {uploading
-          ? "Đang tải lên..."
+          ? t("AvatarUpload.uploading")
           : currentAvatarUrl
-          ? "Thay đổi ảnh"
-          : "Tải ảnh lên"}
+          ? t("AvatarUpload.changePhoto")
+          : t("AvatarUpload.uploadPhoto")}
       </button>
 
       {/* Help Text */}
       <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center max-w-xs">
-        JPG, PNG hoặc GIF. Tối đa 5MB.
+        {t("AvatarUpload.helpText")}
         <br />
-        Click hoặc kéo thả ảnh vào đây
+        {t("AvatarUpload.dragDropText")}
       </p>
     </div>
   );
