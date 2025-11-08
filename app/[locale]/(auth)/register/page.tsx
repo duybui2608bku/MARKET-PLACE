@@ -53,6 +53,8 @@ export default function RegisterPage() {
       if (data.user) {
         // 2. Trigger sẽ tự động tạo user record trong public.users
         // Nhưng để đảm bảo, ta gọi API backup
+        let profileCreated = false;
+
         try {
           const response = await fetch("/api/auth/create-user-profile", {
             method: "POST",
@@ -71,14 +73,29 @@ export default function RegisterPage() {
           const result = await response.json();
 
           if (!response.ok) {
-            // API backup failed but trigger should handle it
+            console.warn("Profile creation API failed:", result.error);
+            // Don't fail registration, but warn user
+          } else {
+            profileCreated = true;
           }
         } catch (apiError) {
-          // Không throw error nếu API fail vì trigger đã handle
+          console.error("Profile creation request failed:", apiError);
+          // Don't fail registration, trigger should handle it
         }
+
+        // Show appropriate success message
+        if (profileCreated) {
+          setMessage(t("Auth.signupSuccess"));
+        } else {
+          setMessage(
+            t("Auth.signupSuccessWithNote") ||
+              "Account created! Please check your email to verify your account."
+          );
+        }
+      } else {
+        setMessage(t("Auth.signupSuccess"));
       }
 
-      setMessage(t("Auth.signupSuccess"));
       setEmail("");
       setPassword("");
       setPhone("");
