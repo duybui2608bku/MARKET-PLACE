@@ -40,6 +40,7 @@
     "terms": "条款与条件",
     "selectRoleError": "请先选择账户类型",
     "signupSuccess": "注册成功！请检查邮箱以完成验证。",
+    "signupSuccessWithNote": "账户已创建！请检查邮箱以验证您的账户。",
     "unknownError": "发生未知错误，请重试。",
     "oauthError": "无法使用 Google 登录，请重试。",
     "loginTitle": "欢迎回来",
@@ -151,5 +152,15 @@
     "updateError": "更新资料失败，请重试。",
     "required": "必填字段",
     "optional": "（可选）"
+  },
+  "AvatarUpload": {
+    "invalidFileType": "请选择图片文件（JPG、JPEG、PNG、GIF、WebP）",
+    "fileTooLarge": "文件大小不得超过5MB",
+    "uploadFailed": "上传失败，请重试。",
+    "uploading": "上传中...",
+    "changePhoto": "更换照片",
+    "uploadPhoto": "上传照片",
+    "helpText": "JPG、PNG 或 GIF。最大 5MB。",
+    "dragDropText": "点击或拖放图片到此处"
   }
 }

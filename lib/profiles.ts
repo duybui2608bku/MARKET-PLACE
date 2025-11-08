@@ -1,5 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import {
+  Result,
+  createSuccess,
+  createFailure,
+  createError,
+  ErrorCodes,
+} from "@/lib/types";
 
 /**
  * Profile Data Types
@@ -82,7 +89,7 @@ export interface EmployerProfileWithUser extends EmployerProfile {
 
 export async function getWorkerProfile(
   userId: string
-): Promise<WorkerProfile | null> {
+): Promise<Result<WorkerProfile>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -93,19 +100,44 @@ export async function getWorkerProfile(
 
     if (error) {
       console.error("Error fetching worker profile:", error);
-      return null;
+
+      // Check if it's a "not found" error
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Worker profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      // Other database errors
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to fetch worker profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as WorkerProfile;
+    return createSuccess(data as WorkerProfile);
   } catch (error) {
     console.error("Unexpected error in getWorkerProfile:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 
 export async function getEmployerProfile(
   userId: string
-): Promise<EmployerProfile | null> {
+): Promise<Result<EmployerProfile>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -116,19 +148,42 @@ export async function getEmployerProfile(
 
     if (error) {
       console.error("Error fetching employer profile:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Employer profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to fetch employer profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as EmployerProfile;
+    return createSuccess(data as EmployerProfile);
   } catch (error) {
     console.error("Unexpected error in getEmployerProfile:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 
 export async function getWorkerProfileWithUser(
   userId: string
-): Promise<WorkerProfileWithUser | null> {
+): Promise<Result<WorkerProfileWithUser>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -139,19 +194,42 @@ export async function getWorkerProfileWithUser(
 
     if (error) {
       console.error("Error fetching worker profile with user:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Worker profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to fetch worker profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as WorkerProfileWithUser;
+    return createSuccess(data as WorkerProfileWithUser);
   } catch (error) {
     console.error("Unexpected error in getWorkerProfileWithUser:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 
 export async function getEmployerProfileWithUser(
   userId: string
-): Promise<EmployerProfileWithUser | null> {
+): Promise<Result<EmployerProfileWithUser>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -162,20 +240,43 @@ export async function getEmployerProfileWithUser(
 
     if (error) {
       console.error("Error fetching employer profile with user:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Employer profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to fetch employer profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as EmployerProfileWithUser;
+    return createSuccess(data as EmployerProfileWithUser);
   } catch (error) {
     console.error("Unexpected error in getEmployerProfileWithUser:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 
 export async function updateWorkerProfile(
   userId: string,
   updates: Partial<Omit<WorkerProfile, "id" | "created_at" | "updated_at">>
-): Promise<WorkerProfile | null> {
+): Promise<Result<WorkerProfile>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -187,20 +288,43 @@ export async function updateWorkerProfile(
 
     if (error) {
       console.error("Error updating worker profile:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Worker profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to update worker profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as WorkerProfile;
+    return createSuccess(data as WorkerProfile);
   } catch (error) {
     console.error("Unexpected error in updateWorkerProfile:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 
 export async function updateEmployerProfile(
   userId: string,
   updates: Partial<Omit<EmployerProfile, "id" | "created_at" | "updated_at">>
-): Promise<EmployerProfile | null> {
+): Promise<Result<EmployerProfile>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -212,13 +336,36 @@ export async function updateEmployerProfile(
 
     if (error) {
       console.error("Error updating employer profile:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(
+            ErrorCodes.PROFILE_NOT_FOUND,
+            "Employer profile not found",
+            { userId, originalError: error }
+          )
+        );
+      }
+
+      return createFailure(
+        createError(
+          ErrorCodes.DATABASE_ERROR,
+          "Failed to update employer profile",
+          { userId, originalError: error }
+        )
+      );
     }
 
-    return data as EmployerProfile;
+    return createSuccess(data as EmployerProfile);
   } catch (error) {
     console.error("Unexpected error in updateEmployerProfile:", error);
-    return null;
+    return createFailure(
+      createError(
+        ErrorCodes.UNKNOWN_ERROR,
+        "An unexpected error occurred",
+        { userId, error }
+      )
+    );
   }
 }
 

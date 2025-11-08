@@ -1,5 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import {
+  Result,
+  createSuccess,
+  createFailure,
+  createError,
+  ErrorCodes,
+} from "@/lib/types";
 
 /**
  * User Data Types
@@ -23,7 +30,7 @@ export interface User {
  * Server-side user queries (using Admin client)
  */
 
-export async function getUserById(userId: string): Promise<User | null> {
+export async function getUserById(userId: string): Promise<Result<User>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -34,17 +41,37 @@ export async function getUserById(userId: string): Promise<User | null> {
 
     if (error) {
       console.error("Error fetching user:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(ErrorCodes.USER_NOT_FOUND, "User not found", {
+            userId,
+            originalError: error,
+          })
+        );
+      }
+
+      return createFailure(
+        createError(ErrorCodes.DATABASE_ERROR, "Failed to fetch user", {
+          userId,
+          originalError: error,
+        })
+      );
     }
 
-    return data as User;
+    return createSuccess(data as User);
   } catch (error) {
     console.error("Unexpected error in getUserById:", error);
-    return null;
+    return createFailure(
+      createError(ErrorCodes.UNKNOWN_ERROR, "An unexpected error occurred", {
+        userId,
+        error,
+      })
+    );
   }
 }
 
-export async function getUserByEmail(email: string): Promise<User | null> {
+export async function getUserByEmail(email: string): Promise<Result<User>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -55,13 +82,33 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
     if (error) {
       console.error("Error fetching user by email:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(ErrorCodes.USER_NOT_FOUND, "User not found", {
+            email,
+            originalError: error,
+          })
+        );
+      }
+
+      return createFailure(
+        createError(ErrorCodes.DATABASE_ERROR, "Failed to fetch user", {
+          email,
+          originalError: error,
+        })
+      );
     }
 
-    return data as User;
+    return createSuccess(data as User);
   } catch (error) {
     console.error("Unexpected error in getUserByEmail:", error);
-    return null;
+    return createFailure(
+      createError(ErrorCodes.UNKNOWN_ERROR, "An unexpected error occurred", {
+        email,
+        error,
+      })
+    );
   }
 }
 
@@ -108,7 +155,7 @@ export async function getEmployers(limit = 50): Promise<User[]> {
 export async function updateUserProfile(
   userId: string,
   updates: Partial<Omit<User, "id" | "email" | "created_at" | "updated_at">>
-): Promise<User | null> {
+): Promise<Result<User>> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -120,13 +167,33 @@ export async function updateUserProfile(
 
     if (error) {
       console.error("Error updating user profile:", error);
-      return null;
+
+      if (error.code === "PGRST116") {
+        return createFailure(
+          createError(ErrorCodes.USER_NOT_FOUND, "User not found", {
+            userId,
+            originalError: error,
+          })
+        );
+      }
+
+      return createFailure(
+        createError(ErrorCodes.DATABASE_ERROR, "Failed to update user", {
+          userId,
+          originalError: error,
+        })
+      );
     }
 
-    return data as User;
+    return createSuccess(data as User);
   } catch (error) {
     console.error("Unexpected error in updateUserProfile:", error);
-    return null;
+    return createFailure(
+      createError(ErrorCodes.UNKNOWN_ERROR, "An unexpected error occurred", {
+        userId,
+        error,
+      })
+    );
   }
 }
 

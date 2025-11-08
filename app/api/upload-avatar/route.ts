@@ -50,6 +50,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Whitelist allowed extensions for security
+    const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"];
+    const fileExt = file.name.split(".").pop()?.toLowerCase();
+
+    if (!fileExt || !ALLOWED_EXTENSIONS.includes(fileExt)) {
+      return NextResponse.json(
+        {
+          error: "Invalid file type. Only JPG, JPEG, PNG, GIF, and WebP are allowed",
+        },
+        { status: 400 }
+      );
+    }
+
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json(
@@ -58,8 +71,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename
-    const fileExt = file.name.split(".").pop();
+    // Validate MIME type matches extension
+    const mimeTypeMap: Record<string, string[]> = {
+      jpg: ["image/jpeg"],
+      jpeg: ["image/jpeg"],
+      png: ["image/png"],
+      gif: ["image/gif"],
+      webp: ["image/webp"],
+    };
+
+    const expectedMimeTypes = mimeTypeMap[fileExt] || [];
+    if (!expectedMimeTypes.includes(file.type)) {
+      return NextResponse.json(
+        {
+          error: "File type mismatch. The file extension does not match its content",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Generate unique filename with sanitized extension
     const fileName = `${userId}/${Date.now()}.${fileExt}`;
 
     // Delete old avatar if exists
@@ -70,10 +101,27 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (userData?.avatar_url) {
-      // Extract path from URL
-      const oldPath = userData.avatar_url.split("/avatars/")[1];
-      if (oldPath) {
-        await supabase.storage.from("avatars").remove([oldPath]);
+      try {
+        // Extract path from URL with validation
+        const urlParts = userData.avatar_url.split("/avatars/");
+        if (urlParts.length === 2) {
+          const oldPath = urlParts[1];
+
+          // Validate path doesn't contain traversal patterns
+          if (
+            oldPath &&
+            !oldPath.includes("..") &&
+            !oldPath.includes("//") &&
+            oldPath.startsWith(`${userId}/`)
+          ) {
+            await supabase.storage.from("avatars").remove([oldPath]);
+          } else {
+            console.warn("Invalid avatar path detected, skipping deletion:", oldPath);
+          }
+        }
+      } catch (error) {
+        // Log but don't fail the upload if old avatar deletion fails
+        console.error("Error deleting old avatar:", error);
       }
     }
 
