@@ -28,6 +28,12 @@ yarn dev
 -- Paste toàn bộ nội dung file supabase/migrations/010_add_admin_role.sql vào đây và chạy
 ```
 
+#### Migration 3: `011_fix_admin_policy_recursion.sql` ⚠️ IMPORTANT
+```sql
+-- Paste toàn bộ nội dung file supabase/migrations/011_fix_admin_policy_recursion.sql vào đây và chạy
+-- This fixes the "infinite recursion detected" error
+```
+
 ### Bước 3: Tạo Tài Khoản Admin
 
 #### Option 1: Tạo tài khoản mới và set admin role

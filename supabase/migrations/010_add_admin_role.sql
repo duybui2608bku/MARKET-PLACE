@@ -18,24 +18,5 @@ GRANT SELECT ON public.admins TO authenticated;
 -- Update comment
 COMMENT ON COLUMN public.users.role IS 'Vai trò: worker (người lao động), employer (người thuê), hoặc admin (quản trị viên)';
 
--- Policy: Admins can view all users
-CREATE POLICY "Admins can view all users"
-  ON public.users
-  FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
--- Policy: Admins can update any user
-CREATE POLICY "Admins can update any user"
-  ON public.users
-  FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+-- Note: Admin policies with proper recursion handling are created in migration 011
+-- This avoids "infinite recursion detected" error

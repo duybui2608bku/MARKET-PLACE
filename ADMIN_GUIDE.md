@@ -31,6 +31,7 @@ WHERE email = 'your-admin-email@example.com';
 # Files are in: supabase/migrations/
 # - 009_create_admin_settings.sql
 # - 010_add_admin_role.sql
+# - 011_fix_admin_policy_recursion.sql (IMPORTANT - fixes infinite recursion error)
 ```
 
 ### Admin Panel Features
@@ -112,6 +113,7 @@ WHERE email = 'email-admin-cua-ban@example.com';
 # Các file nằm ở: supabase/migrations/
 # - 009_create_admin_settings.sql
 # - 010_add_admin_role.sql
+# - 011_fix_admin_policy_recursion.sql (QUAN TRỌNG - fixes infinite recursion error)
 ```
 
 ### Tính Năng Trang Quản Trị
@@ -169,6 +171,7 @@ Thêm link đến các trang mạng xã hội của bạn:
 **Database Migrations:**
 - `supabase/migrations/009_create_admin_settings.sql` - Admin settings table
 - `supabase/migrations/010_add_admin_role.sql` - Add admin role to users
+- `supabase/migrations/011_fix_admin_policy_recursion.sql` - Fix RLS policy infinite recursion
 
 **Backend:**
 - `lib/admin-settings.ts` - Admin settings functions
