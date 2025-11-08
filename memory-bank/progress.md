@@ -2,7 +2,148 @@
 
 ## ✅ Hoàn thành (Completed)
 
-### 1. User Avatar Upload Feature (November 6, 2025)
+### 1. Public Worker Profiles & Reviews System (November 7, 2025)
+
+**Tính năng:** Trang worker profile công khai + hệ thống đánh giá
+
+**Components đã tạo:**
+- ✅ `app/[locale]/worker/[id]/page.tsx` - Public worker profile page (giống Airbnb)
+- ✅ `components/ReviewsSection.tsx` - Reviews & ratings component
+- ✅ `supabase/migrations/007_create_reviews_ratings.sql` - Reviews database schema
+
+**Database Schema - Reviews System:**
+- ✅ Bảng `bookings` - Lịch sử đặt dịch vụ
+- ✅ Bảng `reviews` - Đánh giá & rating (1-5 sao)
+- ✅ Bảng `review_responses` - Worker phản hồi đánh giá
+- ✅ Bảng `review_votes` - Helpful votes
+- ✅ Auto-update rating stats trên worker_profiles
+- ✅ Verified purchase badges
+- ✅ Review images support
+
+**Public Worker Profile Page Features:**
+- ✅ Gallery slider với thumbnails (giống Airbnb)
+- ✅ Hiển thị đầy đủ: age, height, weight, zodiac, hobbies, skills, lifestyle, favorite quote
+- ✅ Introduction & bio sections
+- ✅ Service type & category display
+- ✅ Pricing card: hourly, daily, monthly rates
+- ✅ Reviews section với rating distribution
+- ✅ Booking card (sticky sidebar)
+- ✅ Available status indicator
+- ✅ Verified badge
+- ✅ Like & share buttons
+- ✅ Responsive design (mobile-friendly)
+
+**Reviews Component Features:**
+- ✅ Rating summary (average + distribution chart)
+- ✅ 5-star rating bars with percentages
+- ✅ Filter: All reviews / With photos
+- ✅ Review cards: avatar, stars, comment, images
+- ✅ Verified purchase badges
+- ✅ Helpful votes system
+- ✅ Worker can respond to reviews
+- ✅ Load more pagination
+- ✅ Relative timestamps (e.g., "2 days ago")
+
+**Updated lib/profiles.ts:**
+- ✅ Extended WorkerProfile interface với tất cả fields mới
+- ✅ Review & RatingDistribution interfaces
+- ✅ getWorkerReviews() function
+- ✅ getRatingDistribution() function
+- ✅ formatCurrency() với multi-currency support
+- ✅ calculateAverageRating() function
+
+**Updated /profile/worker page:**
+- ✅ Hiển thị tất cả fields mới (age, height, weight, zodiac, hobbies, skills, gallery, pricing)
+- ✅ Nút "Edit Full Profile" → link đến /worker-onboarding
+- ✅ Nút "View Public Profile" → link đến /worker/[id]
+- ✅ Stats cards: Total Jobs, Completed, Rating, Reviews
+- ✅ Gallery grid preview
+- ✅ Service & pricing info sidebar
+- ✅ Quick actions panel
+- ✅ Clean, modern design
+
+**Integration:**
+- ✅ Public profile accessible at `/worker/[id]`
+- ✅ Worker profile redirects to onboarding if not completed
+- ✅ Seamless navigation between edit/view modes
+
+---
+
+### 2. Worker Profile Setup Flow (November 7, 2025)
+
+**Tính năng:** 3-step onboarding flow cho workers sau khi đăng ký
+
+**Components đã tạo:**
+- ✅ `app/[locale]/(auth)/worker-onboarding/page.tsx` - 3-step onboarding page
+- ✅ `components/MultiImageUpload.tsx` - Component upload nhiều ảnh với drag & drop
+- ✅ `supabase/migrations/005_extend_worker_profiles.sql` - Thêm fields mới
+- ✅ `supabase/migrations/006_setup_storage_galleries.sql` - Storage cho galleries & services
+
+**Database Schema Updates:**
+- ✅ Personal info fields: age, height, weight, zodiac_sign, hobbies, lifestyle, favorite_quote, introduction
+- ✅ Service fields: service_type, service_category, service_level, service_languages
+- ✅ Gallery & service images: gallery_images[], service_images[]
+- ✅ Pricing fields: currency, hourly_rate, min_booking_hours, daily_rate, monthly_rate
+- ✅ Setup tracking: setup_step, setup_completed
+- ✅ Auto-calculation trigger for daily/monthly rates
+
+**Supabase Storage:**
+- ✅ Bucket `galleries` (public) - 3-10 personal photos
+- ✅ Bucket `services` (public) - service illustration images
+- ✅ Storage policies (read, upload, update, delete)
+- ✅ File size limit: 5MB per image
+- ✅ Path format: `{bucket}/{user_id}/{timestamp}-{random}.{ext}`
+
+**Step 1: Personal Information**
+- ✅ Avatar upload
+- ✅ Full name, age, height, weight
+- ✅ Zodiac sign selection
+- ✅ Hobbies & interests (tag input)
+- ✅ Lifestyle description
+- ✅ Favorite quote
+- ✅ Introduction
+- ✅ Skills (tag input)
+- ✅ Experience description
+- ✅ Availability status toggle
+
+**Step 2: Service Selection & Gallery**
+- ✅ Multi-image gallery upload (3-10 images)
+- ✅ Service type selection: Assistance or Companionship
+- ✅ Assistance categories:
+  - Personal Assist
+  - Professional On-site Assist
+  - Virtual Assist
+  - Tour Guide
+  - Translator (with language tags)
+- ✅ Companionship levels (1, 2, 3) with descriptions
+- ✅ Visual radio buttons with detailed descriptions
+
+**Step 3: Pricing Setup**
+- ✅ Currency selection (USD, VND, EUR, JPY, KRW, CNY)
+- ✅ Hourly rate input
+- ✅ Minimum booking hours selector
+- ✅ Auto-calculated daily rate (8 hours)
+- ✅ Auto-calculated monthly rate (160 hours)
+- ✅ Service images upload (optional, max 5)
+- ✅ Visual rate display with currency symbols
+
+**Navigation & UX:**
+- ✅ Progress indicator (1/3, 2/3, 3/3)
+- ✅ Step navigation (back/next buttons)
+- ✅ Form validation at each step
+- ✅ Save progress to database at each step
+- ✅ Beautiful gradient backgrounds
+- ✅ Responsive design (mobile-friendly)
+
+**Integration:**
+- ✅ Auto-redirect new workers to onboarding after registration
+- ✅ Check onboarding completion in auth-callback
+- ✅ Redirect to onboarding if profile incomplete
+- ✅ Redirect to profile page after completion
+
+---
+
+### 3. User Avatar Upload Feature (November 6, 2025)
 
 **Tính năng:** Upload và quản lý avatar cho users
 
@@ -42,7 +183,7 @@
 
 ---
 
-### 2. Role Bug Fix (November 5-6, 2025)
+### 4. Role Bug Fix (November 5-6, 2025)
 
 **Vấn đề:** User chọn "Worker" nhưng bị lưu thành "Employer" trong database
 
@@ -63,7 +204,7 @@
 
 ---
 
-### 3. Trang Profile Cá Nhân cho Worker và Employer
+### 5. Trang Profile Cá Nhân cho Worker và Employer
 
 **Ngày hoàn thành:** November 5, 2025
 
@@ -136,11 +277,14 @@
 
 ## 📊 Statistics
 
-- **Total Features Completed:** 3
-- **Total Migrations:** 4
+- **Total Features Completed:** 5
+- **Total Migrations:** 7
 - **Total API Routes:** 4
-- **Total Pages:** 10+
-- **Last Updated:** November 6, 2025
+- **Total Pages:** 13+
+- **Total Components:** 5+ (AvatarUpload, MultiImageUpload, ReviewsSection, Header, etc.)
+- **Storage Buckets:** 3 (avatars, galleries, services)
+- **Database Tables:** 12+ (users, worker_profiles, employer_profiles, bookings, reviews, etc.)
+- **Last Updated:** November 7, 2025
 
 ---
 
@@ -165,5 +309,5 @@
 
 ---
 
-**Last Updated:** November 6, 2025 16:30
+**Last Updated:** November 7, 2025
 

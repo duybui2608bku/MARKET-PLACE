@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { useT, useLocale } from "@/i18n/provider";
 
@@ -9,6 +10,7 @@ type UserRole = "worker" | "employer" | null;
 
 export default function RegisterPage() {
   const supabase = getSupabaseClient();
+  const router = useRouter();
   const t = useT();
   const locale = useLocale();
   const [step, setStep] = useState<"role" | "details">("role");
@@ -79,6 +81,14 @@ export default function RegisterPage() {
       }
 
       setMessage(t("Auth.signupSuccess"));
+
+      // Redirect workers to onboarding
+      if (selectedRole === "worker") {
+        setTimeout(() => {
+          router.push(`/${locale}/worker-onboarding`);
+        }, 2000);
+      }
+
       setEmail("");
       setPassword("");
       setPhone("");
@@ -151,7 +161,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto cursor-pointer">
             {/* Worker Card */}
             <button
               onClick={() => handleRoleSelect("worker")}

@@ -33,6 +33,38 @@ export interface WorkerProfile {
   facebook_url: string | null;
   linkedin_url: string | null;
   website_url: string | null;
+  
+  // New fields from onboarding
+  age: number | null;
+  height: number | null;
+  weight: number | null;
+  zodiac_sign: string | null;
+  hobbies: string[] | null;
+  lifestyle: string | null;
+  favorite_quote: string | null;
+  introduction: string | null;
+  
+  // Service fields
+  service_type: string | null;
+  service_category: string | null;
+  service_level: number | null;
+  service_description: string | null;
+  service_languages: string[] | null;
+  
+  // Gallery and images
+  gallery_images: string[] | null;
+  service_images: string[] | null;
+  
+  // Pricing fields
+  currency: string;
+  min_booking_hours: number;
+  daily_rate: number | null;
+  monthly_rate: number | null;
+  
+  // Setup tracking
+  setup_step: number;
+  setup_completed: boolean;
+  
   created_at: string;
   updated_at: string;
 }
@@ -439,5 +471,113 @@ export function formatHourlyRate(rate: number | null): string {
 
 export function formatRating(rating: number): string {
   return rating.toFixed(1);
+}
+
+/**
+ * Reviews and Ratings
+ */
+
+export interface Review {
+  id: string;
+  booking_id: string | null;
+  worker_id: string;
+  employer_id: string;
+  rating: number;
+  title: string | null;
+  comment: string | null;
+  images: string[] | null;
+  helpful_count: number;
+  is_verified_purchase: boolean;
+  created_at: string;
+  updated_at: string;
+  // From join
+  employer_name: string | null;
+  employer_avatar: string | null;
+  worker_response: string | null;
+  response_created_at: string | null;
+}
+
+export interface RatingDistribution {
+  5: number;
+  4: number;
+  3: number;
+  2: number;
+  1: number;
+}
+
+export async function getWorkerReviews(
+  workerId: string,
+  limit: number = 10
+): Promise<Review[]> {
+  try {
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("reviews_with_user")
+      .select("*")
+      .eq("worker_id", workerId)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error("Error fetching reviews:", error);
+      return [];
+    }
+
+    return (data as Review[]) || [];
+  } catch (error) {
+    console.error("Unexpected error in getWorkerReviews:", error);
+    return [];
+  }
+}
+
+export async function getRatingDistribution(
+  workerId: string
+): Promise<RatingDistribution> {
+  try {
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("rating")
+      .eq("worker_id", workerId);
+
+    if (error || !data) {
+      return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    }
+
+    const distribution: RatingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    data.forEach((review) => {
+      if (review.rating >= 1 && review.rating <= 5) {
+        distribution[review.rating as keyof RatingDistribution]++;
+      }
+    });
+
+    return distribution;
+  } catch (error) {
+    console.error("Unexpected error in getRatingDistribution:", error);
+    return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  }
+}
+
+export function calculateAverageRating(reviews: Review[]): number {
+  if (reviews.length === 0) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return sum / reviews.length;
+}
+
+export function formatCurrency(amount: number, currency: string): string {
+  const currencyMap: Record<string, { locale: string; currency: string }> = {
+    USD: { locale: "en-US", currency: "USD" },
+    VND: { locale: "vi-VN", currency: "VND" },
+    EUR: { locale: "de-DE", currency: "EUR" },
+    JPY: { locale: "ja-JP", currency: "JPY" },
+    KRW: { locale: "ko-KR", currency: "KRW" },
+    CNY: { locale: "zh-CN", currency: "CNY" },
+  };
+
+  const config = currencyMap[currency] || currencyMap.USD;
+  return new Intl.NumberFormat(config.locale, {
+    style: "currency",
+    currency: config.currency,
+  }).format(amount);
 }
 

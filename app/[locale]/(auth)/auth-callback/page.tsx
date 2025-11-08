@@ -60,6 +60,26 @@ export default function AuthCallbackPage() {
       if (checkResult.exists && checkResult.user) {
         console.log("✅ Existing user, logging in with role:", checkResult.user.role);
         
+        // Check if worker needs to complete onboarding
+        if (checkResult.user.role === "worker") {
+          const { data: profileData } = await supabase
+            .from("worker_profiles")
+            .select("setup_completed")
+            .eq("id", user.id)
+            .single();
+
+          if (!profileData?.setup_completed) {
+            console.log("🚀 Redirecting worker to onboarding...");
+            setStatus("success");
+            setMessage("Please complete your profile setup...");
+            
+            setTimeout(() => {
+              router.push(`/${locale}/worker-onboarding`);
+            }, 1000);
+            return;
+          }
+        }
+        
         // Redirect based on EXISTING role (không thay đổi role)
         setStatus("success");
         setMessage("Welcome back! Redirecting...");
@@ -134,7 +154,12 @@ export default function AuthCallbackPage() {
       setMessage("Registration successful! Redirecting...");
       
       setTimeout(() => {
-        router.push(`/${locale}`);
+        // Redirect new workers to onboarding, employers to home
+        if (roleFromParams === "worker") {
+          router.push(`/${locale}/worker-onboarding`);
+        } else {
+          router.push(`/${locale}`);
+        }
       }, 1000);
 
     } catch (error) {
