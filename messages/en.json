@@ -40,6 +40,7 @@
     "terms": "Terms & Conditions",
     "selectRoleError": "Please select an account type first",
     "signupSuccess": "Sign up successful! Please check your email to confirm.",
+    "signupSuccessWithNote": "Account created! Please check your email to verify your account.",
     "unknownError": "An unknown error occurred. Please try again.",
     "oauthError": "Unable to sign in with Google. Please try again.",
     "loginTitle": "Welcome back",
@@ -151,5 +152,15 @@
     "updateError": "Failed to update profile. Please try again.",
     "required": "Required field",
     "optional": "(optional)"
+  },
+  "AvatarUpload": {
+    "invalidFileType": "Please select an image file (JPG, JPEG, PNG, GIF, WebP)",
+    "fileTooLarge": "File size must not exceed 5MB",
+    "uploadFailed": "Upload failed. Please try again.",
+    "uploading": "Uploading...",
+    "changePhoto": "Change photo",
+    "uploadPhoto": "Upload photo",
+    "helpText": "JPG, PNG or GIF. Maximum 5MB.",
+    "dragDropText": "Click or drag and drop image here"
   }
 }

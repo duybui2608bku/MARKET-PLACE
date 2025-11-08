@@ -101,7 +101,7 @@ export default function WorkerProfilePage() {
   if (!profile || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white pt-16 dark:bg-black">
-        <p className="text-zinc-600 dark:text-zinc-400">Profile not found</p>
+        <p className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.profileNotFound")}</p>
       </div>
     );
   }
@@ -113,10 +113,10 @@ export default function WorkerProfilePage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-black dark:text-white">
-              My Worker Profile
+              {t("WorkerProfile.title")}
             </h1>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Manage your profile and view how customers see you
+              {t("WorkerProfile.subtitle")}
             </p>
           </div>
           <div className="flex gap-3">
@@ -126,7 +126,7 @@ export default function WorkerProfilePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
-                View Public Profile
+                {t("WorkerProfile.viewPublicProfile")}
               </button>
             </Link>
             <Link href={`/${locale}/worker-onboarding`}>
@@ -134,7 +134,7 @@ export default function WorkerProfilePage() {
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Edit Full Profile
+                {t("WorkerProfile.editFullProfile")}
               </button>
             </Link>
           </div>
@@ -145,7 +145,7 @@ export default function WorkerProfilePage() {
           <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-blue-50 to-white p-6 dark:border-zinc-800 dark:from-blue-950/20 dark:to-black">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Jobs</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.totalJobs")}</p>
                 <p className="mt-1 text-3xl font-bold text-black dark:text-white">
                   {profile.total_jobs}
                 </p>
@@ -161,7 +161,7 @@ export default function WorkerProfilePage() {
           <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-green-50 to-white p-6 dark:border-zinc-800 dark:from-green-950/20 dark:to-black">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">Completed</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.completed")}</p>
                 <p className="mt-1 text-3xl font-bold text-black dark:text-white">
                   {profile.completed_jobs}
                 </p>
@@ -177,7 +177,7 @@ export default function WorkerProfilePage() {
           <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-yellow-50 to-white p-6 dark:border-zinc-800 dark:from-yellow-950/20 dark:to-black">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">Rating</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.rating")}</p>
                 <div className="mt-1 flex items-center gap-2">
                   <p className="text-3xl font-bold text-black dark:text-white">
                     {formatRating(profile.rating)}
@@ -196,7 +196,7 @@ export default function WorkerProfilePage() {
           <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-purple-50 to-white p-6 dark:border-zinc-800 dark:from-purple-950/20 dark:to-black">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">Reviews</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.reviews")}</p>
                 <p className="mt-1 text-3xl font-bold text-black dark:text-white">
                   {profile.total_reviews}
                 </p>
@@ -223,7 +223,7 @@ export default function WorkerProfilePage() {
                 )}
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-black dark:text-white">
-                    {user.full_name || "Unnamed Worker"}
+                    {user.full_name || t("WorkerProfile.unnamedWorker")}
                   </h2>
                   <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
                     {profile.city && (
@@ -237,7 +237,7 @@ export default function WorkerProfilePage() {
                     {profile.experience_years > 0 && (
                       <>
                         <span>•</span>
-                        <span>{profile.experience_years}+ years experience</span>
+                        <span>{profile.experience_years}+ {t("WorkerProfile.yearsExperience")}</span>
                       </>
                     )}
                     {profile.is_verified && (
@@ -247,7 +247,7 @@ export default function WorkerProfilePage() {
                           <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
-                          Verified
+                          {t("WorkerProfile.verified")}
                         </span>
                       </>
                     )}
@@ -261,7 +261,7 @@ export default function WorkerProfilePage() {
                       <span className={`h-2 w-2 rounded-full ${
                         profile.available ? "bg-green-600" : "bg-zinc-600"
                       }`} />
-                      {profile.available ? "Available" : "Unavailable"}
+                      {profile.available ? t("WorkerProfile.available") : t("WorkerProfile.unavailable")}
                     </span>
                     {profile.service_type && (
                       <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium capitalize text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
@@ -277,31 +277,31 @@ export default function WorkerProfilePage() {
             {(profile.age || profile.height || profile.weight || profile.zodiac_sign) && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  Personal Information
+                  {t("WorkerProfile.personalInformation")}
                 </h3>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {profile.age && (
                     <div className="text-center">
                       <p className="text-2xl font-bold text-black dark:text-white">{profile.age}</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Age</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.age")}</p>
                     </div>
                   )}
                   {profile.height && (
                     <div className="text-center">
                       <p className="text-2xl font-bold text-black dark:text-white">{profile.height}cm</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Height</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.height")}</p>
                     </div>
                   )}
                   {profile.weight && (
                     <div className="text-center">
                       <p className="text-2xl font-bold text-black dark:text-white">{profile.weight}kg</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Weight</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.weight")}</p>
                     </div>
                   )}
                   {profile.zodiac_sign && (
                     <div className="text-center">
                       <p className="text-2xl font-bold text-black dark:text-white">{profile.zodiac_sign}</p>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Zodiac</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.zodiac")}</p>
                     </div>
                   )}
                 </div>
@@ -312,7 +312,7 @@ export default function WorkerProfilePage() {
             {profile.gallery_images && profile.gallery_images.length > 0 && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  Gallery ({profile.gallery_images.length} photos)
+                  {t("WorkerProfile.gallery")} ({profile.gallery_images.length} {t("WorkerProfile.photos")})
                 </h3>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                   {profile.gallery_images.map((img, idx) => (
@@ -327,20 +327,20 @@ export default function WorkerProfilePage() {
             {/* Introduction & Details */}
             <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
               <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                About Me
+                {t("WorkerProfile.aboutMe")}
               </h3>
               {profile.introduction && (
                 <p className="mb-4 text-zinc-700 dark:text-zinc-300">{profile.introduction}</p>
               )}
               {profile.bio && (
                 <div className="mb-4">
-                  <h4 className="mb-2 font-medium text-black dark:text-white">Experience</h4>
+                  <h4 className="mb-2 font-medium text-black dark:text-white">{t("WorkerProfile.experience")}</h4>
                   <p className="text-sm text-zinc-700 dark:text-zinc-300">{profile.bio}</p>
                 </div>
               )}
               {profile.lifestyle && (
                 <div className="mb-4">
-                  <h4 className="mb-2 font-medium text-black dark:text-white">Lifestyle</h4>
+                  <h4 className="mb-2 font-medium text-black dark:text-white">{t("WorkerProfile.lifestyle")}</h4>
                   <p className="text-sm text-zinc-700 dark:text-zinc-300">{profile.lifestyle}</p>
                 </div>
               )}
@@ -358,7 +358,7 @@ export default function WorkerProfilePage() {
               <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 {profile.skills && profile.skills.length > 0 && (
                   <div className="mb-4">
-                    <h4 className="mb-3 font-semibold text-black dark:text-white">Skills</h4>
+                    <h4 className="mb-3 font-semibold text-black dark:text-white">{t("WorkerProfile.skills")}</h4>
                     <div className="flex flex-wrap gap-2">
                       {profile.skills.map((skill) => (
                         <span key={skill} className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900/30 dark:text-green-200">
@@ -370,7 +370,7 @@ export default function WorkerProfilePage() {
                 )}
                 {profile.hobbies && profile.hobbies.length > 0 && (
                   <div>
-                    <h4 className="mb-3 font-semibold text-black dark:text-white">Hobbies</h4>
+                    <h4 className="mb-3 font-semibold text-black dark:text-white">{t("WorkerProfile.hobbies")}</h4>
                     <div className="flex flex-wrap gap-2">
                       {profile.hobbies.map((hobby) => (
                         <span key={hobby} className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
@@ -390,18 +390,18 @@ export default function WorkerProfilePage() {
             {profile.hourly_rate && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  Pricing
+                  {t("WorkerProfile.pricing")}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">Hourly</span>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.hourly")}</span>
                     <span className="text-lg font-bold text-black dark:text-white">
                       {formatCurrency(profile.hourly_rate, profile.currency)}
                     </span>
                   </div>
                   {profile.daily_rate && (
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400">Daily</span>
+                      <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.daily")}</span>
                       <span className="text-lg font-bold text-black dark:text-white">
                         {formatCurrency(profile.daily_rate, profile.currency)}
                       </span>
@@ -409,7 +409,7 @@ export default function WorkerProfilePage() {
                   )}
                   {profile.monthly_rate && (
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400">Monthly</span>
+                      <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.monthly")}</span>
                       <span className="text-lg font-bold text-black dark:text-white">
                         {formatCurrency(profile.monthly_rate, profile.currency)}
                       </span>
@@ -418,7 +418,7 @@ export default function WorkerProfilePage() {
                 </div>
                 {profile.min_booking_hours && (
                   <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-500">
-                    Minimum {profile.min_booking_hours} hours booking required
+                    {t("WorkerProfile.minimumBookingHours").replace("{hours}", profile.min_booking_hours.toString())}
                   </p>
                 )}
               </div>
@@ -428,18 +428,18 @@ export default function WorkerProfilePage() {
             {profile.service_type && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  Service
+                  {t("WorkerProfile.service")}
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-zinc-600 dark:text-zinc-400">Type:</span>
+                    <span className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.type")}:</span>
                     <span className="font-medium capitalize text-black dark:text-white">
                       {profile.service_type}
                     </span>
                   </div>
                   {profile.service_category && (
                     <div className="flex justify-between">
-                      <span className="text-zinc-600 dark:text-zinc-400">Category:</span>
+                      <span className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.category")}:</span>
                       <span className="font-medium text-black dark:text-white">
                         {profile.service_category.replace(/_/g, " ")}
                       </span>
@@ -447,7 +447,7 @@ export default function WorkerProfilePage() {
                   )}
                   {profile.service_level && (
                     <div className="flex justify-between">
-                      <span className="text-zinc-600 dark:text-zinc-400">Level:</span>
+                      <span className="text-zinc-600 dark:text-zinc-400">{t("WorkerProfile.level")}:</span>
                       <span className="font-medium text-black dark:text-white">
                         Level {profile.service_level}
                       </span>
@@ -460,7 +460,7 @@ export default function WorkerProfilePage() {
             {/* Quick Actions */}
             <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-blue-50 to-white p-6 dark:border-zinc-800 dark:from-blue-950/20 dark:to-black">
               <h3 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                Quick Actions
+                {t("WorkerProfile.quickActions")}
               </h3>
               <div className="space-y-2">
                 <Link href={`/${locale}/worker-onboarding`} className="block">
@@ -468,7 +468,7 @@ export default function WorkerProfilePage() {
                     <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Edit Profile
+                    {t("WorkerProfile.editProfile")}
                   </button>
                 </Link>
                 <Link href={`/${locale}/worker/${user.id}`} className="block">
@@ -477,7 +477,7 @@ export default function WorkerProfilePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
-                    View Public Profile
+                    {t("WorkerProfile.viewPublicProfile")}
                   </button>
                 </Link>
               </div>

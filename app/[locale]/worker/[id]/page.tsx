@@ -12,7 +12,7 @@ import {
   type Review,
   type RatingDistribution,
 } from "@/lib/profiles";
-import { useLocale } from "@/i18n/provider";
+import { useT, useLocale } from "@/i18n/provider";
 import ReviewsSection from "@/components/ReviewsSection";
 import { AvailabilityCalendar } from "@/components/AvailabilityCalendar";
 
@@ -20,6 +20,7 @@ export default function WorkerProfileDetailPage() {
   const params = useParams();
   const router = useRouter();
   const locale = useLocale();
+  const t = useT();
   const supabase = getSupabaseClient();
 
   const workerId = params.id as string;
@@ -104,7 +105,7 @@ export default function WorkerProfileDetailPage() {
   if (!profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
-        <p className="text-zinc-600 dark:text-zinc-400">Profile not found</p>
+        <p className="text-zinc-600 dark:text-zinc-400">{t("PublicProfile.profileNotFound")}</p>
       </div>
     );
   }
@@ -118,7 +119,7 @@ export default function WorkerProfileDetailPage() {
             onClick={() => router.back()}
             className="flex items-center gap-2 text-sm text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white"
           >
-            ← Quay lại Marketplace
+            {t("PublicProfile.backToMarketplace")}
           </button>
         </div>
       </div>
@@ -216,7 +217,7 @@ export default function WorkerProfileDetailPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h1 className="text-3xl font-bold text-black dark:text-white">
-                      {profile.full_name || "Unnamed Worker"}
+                      {profile.full_name || t("PublicProfile.unnamedWorker")}
                     </h1>
                     <div className="mt-2 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                       <svg
@@ -240,7 +241,7 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                       {profile.city && profile.district
                         ? `${profile.district}, ${profile.city}`
-                        : profile.city || "Location not specified"}
+                        : profile.city || t("PublicProfile.locationNotSpecified")}
                       {profile.is_verified && (
                         <>
                           <span>•</span>
@@ -256,7 +257,7 @@ export default function WorkerProfileDetailPage() {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            Verified
+                            {t("PublicProfile.verified")}
                           </span>
                         </>
                       )}
@@ -317,10 +318,10 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                     </div>
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                      Tuổi
+                      {t("PublicProfile.age")}
                     </p>
                     <p className="text-lg font-semibold text-black dark:text-white">
-                      {profile.age} tuổi
+                      {profile.age} {t("PublicProfile.yearsOld")}
                     </p>
                   </div>
                 )}
@@ -342,7 +343,7 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                     </div>
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                      Chiều cao
+                      {t("PublicProfile.height")}
                     </p>
                     <p className="text-lg font-semibold text-black dark:text-white">
                       {profile.height} cm
@@ -367,7 +368,7 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                     </div>
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                      Cân nặng
+                      {t("PublicProfile.weight")}
                     </p>
                     <p className="text-lg font-semibold text-black dark:text-white">
                       {profile.weight} kg
@@ -392,7 +393,7 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                     </div>
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                      Cung hoàng đạo
+                      {t("PublicProfile.zodiac")}
                     </p>
                     <p className="text-lg font-semibold text-black dark:text-white">
                       {profile.zodiac_sign}
@@ -405,7 +406,7 @@ export default function WorkerProfileDetailPage() {
               {profile.introduction && (
                 <div>
                   <h2 className="text-xl font-bold text-black dark:text-white">
-                    Introduction
+                    {t("PublicProfile.introduction")}
                   </h2>
                   <p className="mt-2 text-zinc-700 dark:text-zinc-300">
                     {profile.introduction}
@@ -417,7 +418,7 @@ export default function WorkerProfileDetailPage() {
               {profile.hobbies && profile.hobbies.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-black dark:text-white">
-                    Sở thích
+                    {t("PublicProfile.hobbies")}
                   </h3>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {profile.hobbies.map((hobby) => (
@@ -435,7 +436,7 @@ export default function WorkerProfileDetailPage() {
               {profile.skills && profile.skills.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-black dark:text-white">
-                    Thông số kỹ thuật
+                    {t("PublicProfile.skills")}
                   </h3>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {profile.skills.map((skill) => (
@@ -454,7 +455,7 @@ export default function WorkerProfileDetailPage() {
               {profile.lifestyle && (
                 <div>
                   <h3 className="text-lg font-semibold text-black dark:text-white">
-                    Lối sống
+                    {t("PublicProfile.lifestyle")}
                   </h3>
                   <p className="mt-2 text-zinc-700 dark:text-zinc-300">
                     {profile.lifestyle}
@@ -466,7 +467,7 @@ export default function WorkerProfileDetailPage() {
               {profile.favorite_quote && (
                 <div className="rounded-xl border-l-4 border-blue-600 bg-zinc-50 p-4 dark:border-blue-400 dark:bg-zinc-900/50">
                   <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    Châm ngôn cá nhân
+                    {t("PublicProfile.favoriteQuote")}
                   </p>
                   <p className="mt-1 italic text-zinc-900 dark:text-zinc-100">
                     &ldquo;{profile.favorite_quote}&rdquo;
@@ -491,20 +492,20 @@ export default function WorkerProfileDetailPage() {
               <div className="mb-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-black dark:text-white">
-                    Dịch vụ cung cấp
+                    {t("PublicProfile.serviceProvided")}
                   </h3>
                   {profile.available && (
                     <span className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400">
                       <span className="h-2 w-2 rounded-full bg-green-600 dark:bg-green-400" />
-                      Available now
+                      {t("PublicProfile.availableNow")}
                     </span>
                   )}
                 </div>
                 {profile.service_type && (
                   <p className="mt-1 text-sm capitalize text-zinc-600 dark:text-zinc-400">
                     {profile.service_type === "assistance"
-                      ? "Hỗ trợ"
-                      : "Đồng hành"}{" "}
+                      ? t("PublicProfile.assistance")
+                      : t("PublicProfile.companionship")}{" "}
                     •{" "}
                     {profile.service_category ||
                       `Level ${profile.service_level}`}
@@ -516,7 +517,7 @@ export default function WorkerProfileDetailPage() {
               {profile.hourly_rate && (
                 <div className="space-y-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">
                   <h4 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                    Giá cả
+                    {t("PublicProfile.pricing")}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -534,7 +535,7 @@ export default function WorkerProfileDetailPage() {
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <span className="text-sm">Giá theo giờ</span>
+                        <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
                       </div>
                       <p className="text-xl font-bold text-black dark:text-white">
                         {formatCurrency(profile.hourly_rate, profile.currency)}
@@ -556,7 +557,7 @@ export default function WorkerProfileDetailPage() {
                               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                           </svg>
-                          <span className="text-sm">Giá theo ngày</span>
+                          <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
                         </div>
                         <p className="text-xl font-bold text-black dark:text-white">
                           {formatCurrency(profile.daily_rate, profile.currency)}
@@ -579,7 +580,7 @@ export default function WorkerProfileDetailPage() {
                               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                           </svg>
-                          <span className="text-sm">Giá theo tháng</span>
+                          <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
                         </div>
                         <p className="text-xl font-bold text-black dark:text-white">
                           {formatCurrency(
@@ -612,8 +613,8 @@ export default function WorkerProfileDetailPage() {
                         />
                       </svg>
                       <span className="text-zinc-700 dark:text-zinc-300">
-                        Kinh nghiệm:{" "}
-                        <strong>{profile.experience_years}+ years</strong>
+                        {t("PublicProfile.experience")}:{" "}
+                        <strong>{profile.experience_years}+ {t("PublicProfile.years")}</strong>
                       </span>
                     </div>
                   )}
@@ -633,8 +634,8 @@ export default function WorkerProfileDetailPage() {
                       />
                     </svg>
                     <span className="text-zinc-700 dark:text-zinc-300">
-                      Thời gian phản hồi:{" "}
-                      <strong>Within {profile.min_booking_hours} hours</strong>
+                      {t("PublicProfile.responseTime")}:{" "}
+                      <strong>{t("PublicProfile.withinHours").replace("{hours}", profile.min_booking_hours.toString())}</strong>
                     </span>
                   </div>
                 )}
@@ -655,7 +656,7 @@ export default function WorkerProfileDetailPage() {
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                Đặt dịch vụ này
+                {t("PublicProfile.bookService")}
               </button>
 
               {/* Contact */}
@@ -673,7 +674,7 @@ export default function WorkerProfileDetailPage() {
                     d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
                   />
                 </svg>
-                Gửi tin nhắn
+                {t("PublicProfile.sendMessage")}
               </button>
             </div>
 

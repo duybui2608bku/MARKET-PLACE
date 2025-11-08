@@ -40,6 +40,7 @@
     "terms": "Điều khoản & Điều kiện",
     "selectRoleError": "Vui lòng chọn loại tài khoản trước",
     "signupSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
+    "signupSuccessWithNote": "Tài khoản đã được tạo! Vui lòng kiểm tra email để xác nhận tài khoản.",
     "unknownError": "Đã xảy ra lỗi không xác định. Vui lòng thử lại.",
     "oauthError": "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
     "loginTitle": "Chào mừng trở lại",
@@ -151,5 +152,15 @@
     "updateError": "Không thể cập nhật hồ sơ. Vui lòng thử lại.",
     "required": "Trường bắt buộc",
     "optional": "(không bắt buộc)"
+  },
+  "AvatarUpload": {
+    "invalidFileType": "Vui lòng chọn file ảnh (JPG, JPEG, PNG, GIF, WebP)",
+    "fileTooLarge": "Kích thước file không được vượt quá 5MB",
+    "uploadFailed": "Upload thất bại. Vui lòng thử lại.",
+    "uploading": "Đang tải lên...",
+    "changePhoto": "Thay đổi ảnh",
+    "uploadPhoto": "Tải ảnh lên",
+    "helpText": "JPG, PNG hoặc GIF. Tối đa 5MB.",
+    "dragDropText": "Click hoặc kéo thả ảnh vào đây"
   }
 }
