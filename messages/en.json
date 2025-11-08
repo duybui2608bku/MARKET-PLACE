@@ -245,43 +245,96 @@
     "terms": "Terms of Service",
     "contact": "Contact"
   },
-  "Admin": {
+  "admin": {
     "title": "Admin Panel",
     "subtitle": "Manage your website settings, SEO, branding, and more",
-    "seoTab": "SEO Settings",
-    "brandingTab": "Logo & Branding",
-    "headerTab": "Header",
-    "footerTab": "Footer",
-    "contactTab": "Contact Info",
-    "socialTab": "Social Media",
-    "seoSettings": "SEO Settings",
-    "siteTitle": "Site Title",
-    "siteDescription": "Site Description",
-    "siteKeywords": "Site Keywords (comma separated)",
-    "ogImage": "OG Image URL",
-    "brandingSettings": "Logo & Branding",
-    "logoUrl": "Logo URL",
-    "logoText": "Logo Text",
-    "faviconUrl": "Favicon URL",
-    "headerSettings": "Header Settings",
-    "headerBgColor": "Header Background Color",
-    "headerTextColor": "Header Text Color",
-    "showLanguageSwitcher": "Show Language Switcher",
-    "showThemeToggle": "Show Theme Toggle",
-    "footerSettings": "Footer Settings",
-    "enableFooter": "Enable Footer",
-    "footerText": "Footer Copyright Text",
-    "footerBgColor": "Footer Background Color",
-    "termsUrl": "Terms of Service URL",
-    "privacyUrl": "Privacy Policy URL",
-    "contactSettings": "Contact Information",
-    "contactEmail": "Contact Email",
-    "contactPhone": "Contact Phone",
-    "contactAddress": "Contact Address",
-    "socialSettings": "Social Media Links",
+    "backToSite": "Back to site",
+    "menu": {
+      "dashboard": "Dashboard",
+      "seo": "SEO",
+      "branding": "Branding",
+      "header": "Header",
+      "footer": "Footer",
+      "contact": "Contact",
+      "social": "Social Media",
+      "users": "Users"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Overview of your website",
+      "welcome": "Welcome to Admin Panel",
+      "totalUsers": "Total Users",
+      "totalSettings": "Total Settings",
+      "activeFeatures": "Active Features",
+      "quickLinks": "Quick Links"
+    },
+    "seo": {
+      "title": "SEO Settings",
+      "subtitle": "Manage SEO and metadata",
+      "siteTitle": "Site Title",
+      "siteDescription": "Site Description",
+      "siteKeywords": "Site Keywords (comma separated)",
+      "ogImage": "OG Image URL",
+      "uploadOgImage": "Upload OG Image"
+    },
+    "branding": {
+      "title": "Logo & Branding",
+      "subtitle": "Manage logo and brand identity",
+      "logoUrl": "Logo URL",
+      "logoText": "Logo Text",
+      "faviconUrl": "Favicon URL",
+      "uploadLogo": "Upload Logo",
+      "uploadFavicon": "Upload Favicon"
+    },
+    "header": {
+      "title": "Header Settings",
+      "subtitle": "Customize website header",
+      "headerBgColor": "Header Background Color",
+      "headerTextColor": "Header Text Color",
+      "showLanguageSwitcher": "Show Language Switcher",
+      "showThemeToggle": "Show Theme Toggle"
+    },
+    "footer": {
+      "title": "Footer Settings",
+      "subtitle": "Customize website footer",
+      "enableFooter": "Enable Footer",
+      "footerText": "Footer Copyright Text",
+      "footerBgColor": "Footer Background Color",
+      "termsUrl": "Terms of Service URL",
+      "privacyUrl": "Privacy Policy URL"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "subtitle": "Manage contact details",
+      "contactEmail": "Contact Email",
+      "contactPhone": "Contact Phone",
+      "contactAddress": "Contact Address"
+    },
+    "social": {
+      "title": "Social Media Links",
+      "subtitle": "Manage social media links",
+      "facebook": "Facebook URL",
+      "twitter": "Twitter URL",
+      "instagram": "Instagram URL",
+      "linkedin": "LinkedIn URL",
+      "youtube": "YouTube URL"
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "View and manage users"
+    },
     "saveChanges": "Save Changes",
     "cancel": "Cancel",
+    "saving": "Saving...",
     "saveSuccess": "Settings saved successfully!",
-    "saveError": "Failed to save settings"
+    "saveError": "Failed to save settings",
+    "upload": {
+      "dragDrop": "Drag and drop image here or click to select",
+      "uploading": "Uploading...",
+      "success": "Upload successful!",
+      "error": "Upload failed",
+      "maxSize": "Max size: 5MB",
+      "supportedFormats": "Supported formats: JPG, PNG, GIF, WebP"
+    }
   }
 }

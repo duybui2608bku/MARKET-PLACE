@@ -245,43 +245,96 @@
     "terms": "Điều Khoản Dịch Vụ",
     "contact": "Liên Hệ"
   },
-  "Admin": {
+  "admin": {
     "title": "Quản Trị",
     "subtitle": "Quản lý cài đặt trang web, SEO, thương hiệu và nhiều hơn nữa",
-    "seoTab": "Cài Đặt SEO",
-    "brandingTab": "Logo & Thương Hiệu",
-    "headerTab": "Header",
-    "footerTab": "Footer",
-    "contactTab": "Thông Tin Liên Hệ",
-    "socialTab": "Mạng Xã Hội",
-    "seoSettings": "Cài Đặt SEO",
-    "siteTitle": "Tiêu Đề Trang",
-    "siteDescription": "Mô Tả Trang",
-    "siteKeywords": "Từ Khóa Trang (phân cách bằng dấu phẩy)",
-    "ogImage": "URL Ảnh OG",
-    "brandingSettings": "Logo & Thương Hiệu",
-    "logoUrl": "URL Logo",
-    "logoText": "Văn Bản Logo",
-    "faviconUrl": "URL Favicon",
-    "headerSettings": "Cài Đặt Header",
-    "headerBgColor": "Màu Nền Header",
-    "headerTextColor": "Màu Chữ Header",
-    "showLanguageSwitcher": "Hiển Thị Chuyển Đổi Ngôn Ngữ",
-    "showThemeToggle": "Hiển Thị Chuyển Đổi Giao Diện",
-    "footerSettings": "Cài Đặt Footer",
-    "enableFooter": "Bật Footer",
-    "footerText": "Văn Bản Bản Quyền Footer",
-    "footerBgColor": "Màu Nền Footer",
-    "termsUrl": "URL Điều Khoản Dịch Vụ",
-    "privacyUrl": "URL Chính Sách Bảo Mật",
-    "contactSettings": "Thông Tin Liên Hệ",
-    "contactEmail": "Email Liên Hệ",
-    "contactPhone": "Điện Thoại Liên Hệ",
-    "contactAddress": "Địa Chỉ Liên Hệ",
-    "socialSettings": "Liên Kết Mạng Xã Hội",
+    "backToSite": "Quay lại trang web",
+    "menu": {
+      "dashboard": "Tổng Quan",
+      "seo": "SEO",
+      "branding": "Thương Hiệu",
+      "header": "Header",
+      "footer": "Footer",
+      "contact": "Liên Hệ",
+      "social": "Mạng Xã Hội",
+      "users": "Người Dùng"
+    },
+    "dashboard": {
+      "title": "Tổng Quan",
+      "subtitle": "Xem tổng quan về trang web của bạn",
+      "welcome": "Chào mừng đến với Admin Panel",
+      "totalUsers": "Tổng Người Dùng",
+      "totalSettings": "Tổng Cài Đặt",
+      "activeFeatures": "Tính Năng Hoạt Động",
+      "quickLinks": "Liên Kết Nhanh"
+    },
+    "seo": {
+      "title": "Cài Đặt SEO",
+      "subtitle": "Quản lý SEO và metadata",
+      "siteTitle": "Tiêu Đề Trang",
+      "siteDescription": "Mô Tả Trang",
+      "siteKeywords": "Từ Khóa Trang (phân cách bằng dấu phẩy)",
+      "ogImage": "URL Ảnh OG",
+      "uploadOgImage": "Tải ảnh OG lên"
+    },
+    "branding": {
+      "title": "Logo & Thương Hiệu",
+      "subtitle": "Quản lý logo và nhận diện thương hiệu",
+      "logoUrl": "URL Logo",
+      "logoText": "Văn Bản Logo",
+      "faviconUrl": "URL Favicon",
+      "uploadLogo": "Tải logo lên",
+      "uploadFavicon": "Tải favicon lên"
+    },
+    "header": {
+      "title": "Cài Đặt Header",
+      "subtitle": "Tùy chỉnh header của trang web",
+      "headerBgColor": "Màu Nền Header",
+      "headerTextColor": "Màu Chữ Header",
+      "showLanguageSwitcher": "Hiển Thị Chuyển Đổi Ngôn Ngữ",
+      "showThemeToggle": "Hiển Thị Chuyển Đổi Giao Diện"
+    },
+    "footer": {
+      "title": "Cài Đặt Footer",
+      "subtitle": "Tùy chỉnh footer của trang web",
+      "enableFooter": "Bật Footer",
+      "footerText": "Văn Bản Bản Quyền Footer",
+      "footerBgColor": "Màu Nền Footer",
+      "termsUrl": "URL Điều Khoản Dịch Vụ",
+      "privacyUrl": "URL Chính Sách Bảo Mật"
+    },
+    "contact": {
+      "title": "Thông Tin Liên Hệ",
+      "subtitle": "Quản lý thông tin liên hệ",
+      "contactEmail": "Email Liên Hệ",
+      "contactPhone": "Điện Thoại Liên Hệ",
+      "contactAddress": "Địa Chỉ Liên Hệ"
+    },
+    "social": {
+      "title": "Liên Kết Mạng Xã Hội",
+      "subtitle": "Quản lý các liên kết mạng xã hội",
+      "facebook": "Facebook URL",
+      "twitter": "Twitter URL",
+      "instagram": "Instagram URL",
+      "linkedin": "LinkedIn URL",
+      "youtube": "YouTube URL"
+    },
+    "users": {
+      "title": "Quản Lý Người Dùng",
+      "subtitle": "Xem và quản lý người dùng"
+    },
     "saveChanges": "Lưu Thay Đổi",
     "cancel": "Hủy",
+    "saving": "Đang lưu...",
     "saveSuccess": "Đã lưu cài đặt thành công!",
-    "saveError": "Không thể lưu cài đặt"
+    "saveError": "Không thể lưu cài đặt",
+    "upload": {
+      "dragDrop": "Kéo thả ảnh vào đây hoặc click để chọn",
+      "uploading": "Đang tải lên...",
+      "success": "Tải lên thành công!",
+      "error": "Lỗi khi tải lên",
+      "maxSize": "Kích thước tối đa: 5MB",
+      "supportedFormats": "Định dạng hỗ trợ: JPG, PNG, GIF, WebP"
+    }
   }
 }

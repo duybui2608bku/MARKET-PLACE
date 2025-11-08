@@ -245,43 +245,96 @@
     "terms": "서비스 약관",
     "contact": "연락처"
   },
-  "Admin": {
+  "admin": {
     "title": "관리자 패널",
     "subtitle": "웹사이트 설정, SEO, 브랜딩 등을 관리하세요",
-    "seoTab": "SEO 설정",
-    "brandingTab": "로고 및 브랜딩",
-    "headerTab": "헤더",
-    "footerTab": "푸터",
-    "contactTab": "연락처 정보",
-    "socialTab": "소셜 미디어",
-    "seoSettings": "SEO 설정",
-    "siteTitle": "사이트 제목",
-    "siteDescription": "사이트 설명",
-    "siteKeywords": "사이트 키워드 (쉼표로 구분)",
-    "ogImage": "OG 이미지 URL",
-    "brandingSettings": "로고 및 브랜딩",
-    "logoUrl": "로고 URL",
-    "logoText": "로고 텍스트",
-    "faviconUrl": "파비콘 URL",
-    "headerSettings": "헤더 설정",
-    "headerBgColor": "헤더 배경색",
-    "headerTextColor": "헤더 텍스트 색상",
-    "showLanguageSwitcher": "언어 전환기 표시",
-    "showThemeToggle": "테마 전환 표시",
-    "footerSettings": "푸터 설정",
-    "enableFooter": "푸터 활성화",
-    "footerText": "푸터 저작권 텍스트",
-    "footerBgColor": "푸터 배경색",
-    "termsUrl": "서비스 약관 URL",
-    "privacyUrl": "개인정보 보호정책 URL",
-    "contactSettings": "연락처 정보",
-    "contactEmail": "연락처 이메일",
-    "contactPhone": "연락처 전화",
-    "contactAddress": "연락처 주소",
-    "socialSettings": "소셜 미디어 링크",
+    "backToSite": "사이트로 돌아가기",
+    "menu": {
+      "dashboard": "대시보드",
+      "seo": "SEO",
+      "branding": "브랜딩",
+      "header": "헤더",
+      "footer": "푸터",
+      "contact": "연락처",
+      "social": "소셜 미디어",
+      "users": "사용자"
+    },
+    "dashboard": {
+      "title": "대시보드",
+      "subtitle": "웹사이트 개요",
+      "welcome": "관리자 패널에 오신 것을 환영합니다",
+      "totalUsers": "총 사용자",
+      "totalSettings": "총 설정",
+      "activeFeatures": "활성 기능",
+      "quickLinks": "빠른 링크"
+    },
+    "seo": {
+      "title": "SEO 설정",
+      "subtitle": "SEO 및 메타데이터 관리",
+      "siteTitle": "사이트 제목",
+      "siteDescription": "사이트 설명",
+      "siteKeywords": "사이트 키워드 (쉼표로 구분)",
+      "ogImage": "OG 이미지 URL",
+      "uploadOgImage": "OG 이미지 업로드"
+    },
+    "branding": {
+      "title": "로고 및 브랜딩",
+      "subtitle": "로고 및 브랜드 아이덴티티 관리",
+      "logoUrl": "로고 URL",
+      "logoText": "로고 텍스트",
+      "faviconUrl": "파비콘 URL",
+      "uploadLogo": "로고 업로드",
+      "uploadFavicon": "파비콘 업로드"
+    },
+    "header": {
+      "title": "헤더 설정",
+      "subtitle": "웹사이트 헤더 커스터마이즈",
+      "headerBgColor": "헤더 배경색",
+      "headerTextColor": "헤더 텍스트 색상",
+      "showLanguageSwitcher": "언어 전환기 표시",
+      "showThemeToggle": "테마 전환 표시"
+    },
+    "footer": {
+      "title": "푸터 설정",
+      "subtitle": "웹사이트 푸터 커스터마이즈",
+      "enableFooter": "푸터 활성화",
+      "footerText": "푸터 저작권 텍스트",
+      "footerBgColor": "푸터 배경색",
+      "termsUrl": "서비스 약관 URL",
+      "privacyUrl": "개인정보 보호정책 URL"
+    },
+    "contact": {
+      "title": "연락처 정보",
+      "subtitle": "연락처 세부정보 관리",
+      "contactEmail": "연락처 이메일",
+      "contactPhone": "연락처 전화",
+      "contactAddress": "연락처 주소"
+    },
+    "social": {
+      "title": "소셜 미디어 링크",
+      "subtitle": "소셜 미디어 링크 관리",
+      "facebook": "Facebook URL",
+      "twitter": "Twitter URL",
+      "instagram": "Instagram URL",
+      "linkedin": "LinkedIn URL",
+      "youtube": "YouTube URL"
+    },
+    "users": {
+      "title": "사용자 관리",
+      "subtitle": "사용자 보기 및 관리"
+    },
     "saveChanges": "변경사항 저장",
     "cancel": "취소",
+    "saving": "저장 중...",
     "saveSuccess": "설정이 성공적으로 저장되었습니다!",
-    "saveError": "설정 저장 실패"
+    "saveError": "설정 저장 실패",
+    "upload": {
+      "dragDrop": "이미지를 여기로 드래그 앤 드롭하거나 클릭하여 선택하세요",
+      "uploading": "업로드 중...",
+      "success": "업로드 성공!",
+      "error": "업로드 실패",
+      "maxSize": "최대 크기: 5MB",
+      "supportedFormats": "지원 형식: JPG, PNG, GIF, WebP"
+    }
   }
 }
