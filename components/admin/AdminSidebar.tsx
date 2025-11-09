@@ -14,6 +14,10 @@ import {
   Menu,
   ChevronDown,
   ChevronRight,
+  UserCog,
+  Briefcase,
+  Calendar,
+  Flag,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -38,6 +42,32 @@ export default function AdminSidebar() {
       key: "dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />,
       href: `/${locale}/admin`,
+    },
+    {
+      key: "userManagement",
+      icon: <UserCog className="w-5 h-5" />,
+      children: [
+        {
+          key: "workers",
+          icon: <Briefcase className="w-4 h-4" />,
+          href: `/${locale}/admin/workers`,
+        },
+        {
+          key: "clients",
+          icon: <Users className="w-4 h-4" />,
+          href: `/${locale}/admin/clients`,
+        },
+      ],
+    },
+    {
+      key: "bookings",
+      icon: <Calendar className="w-5 h-5" />,
+      href: `/${locale}/admin/bookings`,
+    },
+    {
+      key: "reports",
+      icon: <Flag className="w-5 h-5" />,
+      href: `/${locale}/admin/reports`,
     },
     {
       key: "settings",
@@ -74,11 +104,6 @@ export default function AdminSidebar() {
           href: `/${locale}/admin/social`,
         },
       ],
-    },
-    {
-      key: "users",
-      icon: <Users className="w-5 h-5" />,
-      href: `/${locale}/admin/users`,
     },
   ];
 
