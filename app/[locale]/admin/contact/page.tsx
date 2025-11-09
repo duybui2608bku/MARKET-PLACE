@@ -2,6 +2,9 @@
 
 import { useT } from "@/i18n/provider";
 import AdminSettingsForm from "@/components/admin/AdminSettingsForm";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function ContactSettingsPage() {
   const t = useT();
@@ -13,47 +16,47 @@ export default function ContactSettingsPage() {
     >
       {(settings, updateSettings) => (
         <>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="contact_email">
               {t("admin.contact.contactEmail")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="contact_email"
               type="email"
               value={settings.contact_email || ""}
               onChange={(e) =>
                 updateSettings({ contact_email: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="contact@example.com"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="contact_phone">
               {t("admin.contact.contactPhone")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="contact_phone"
               type="tel"
               value={settings.contact_phone || ""}
               onChange={(e) =>
                 updateSettings({ contact_phone: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="+1 234 567 8900"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="contact_address">
               {t("admin.contact.contactAddress")}
-            </label>
-            <textarea
+            </Label>
+            <Textarea
+              id="contact_address"
               value={settings.contact_address || ""}
               onChange={(e) =>
                 updateSettings({ contact_address: e.target.value })
               }
               rows={3}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="123 Main St, City, Country"
             />
           </div>

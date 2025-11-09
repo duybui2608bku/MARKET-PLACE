@@ -2,6 +2,9 @@
 
 import { useT } from "@/i18n/provider";
 import AdminSettingsForm from "@/components/admin/AdminSettingsForm";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function FooterSettingsPage() {
   const t = useT();
@@ -13,70 +16,69 @@ export default function FooterSettingsPage() {
     >
       {(settings, updateSettings) => (
         <>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="footer_enabled"
               checked={settings.footer_enabled ?? true}
-              onChange={(e) =>
-                updateSettings({ footer_enabled: e.target.checked })
+              onCheckedChange={(checked) =>
+                updateSettings({ footer_enabled: !!checked })
               }
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+            <Label htmlFor="footer_enabled" className="font-normal cursor-pointer">
               {t("admin.footer.enableFooter")}
-            </label>
+            </Label>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="footer_text">
               {t("admin.footer.footerText")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="footer_text"
               type="text"
               value={settings.footer_text || ""}
               onChange={(e) => updateSettings({ footer_text: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="© 2025 MarketPlace. All rights reserved."
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="footer_bg_color">
               {t("admin.footer.footerBgColor")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="footer_bg_color"
               type="text"
               value={settings.footer_bg_color || ""}
               onChange={(e) =>
                 updateSettings({ footer_bg_color: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="#ffffff"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="terms_url">
               {t("admin.footer.termsUrl")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="terms_url"
               type="text"
               value={settings.terms_url || ""}
               onChange={(e) => updateSettings({ terms_url: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="/terms"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="privacy_url">
               {t("admin.footer.privacyUrl")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="privacy_url"
               type="text"
               value={settings.privacy_url || ""}
               onChange={(e) => updateSettings({ privacy_url: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="/privacy"
             />
           </div>

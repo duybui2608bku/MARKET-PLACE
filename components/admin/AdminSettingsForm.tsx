@@ -4,6 +4,10 @@ import { useState, useEffect, ReactNode } from "react";
 import { useT } from "@/i18n/provider";
 import { AdminSettings } from "@/lib/admin-settings";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, CheckCircle2, AlertCircle, Save, X } from "lucide-react";
 
 interface AdminSettingsFormProps {
   title: string;
@@ -86,78 +90,73 @@ export default function AdminSettingsForm({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
           {title}
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">{subtitle}</p>
+        <p className="mt-2 text-muted-foreground">{subtitle}</p>
       </div>
 
       {/* Message */}
       {message && (
-        <div
-          className={`mb-6 p-4 rounded-lg ${
-            message.type === "success"
-              ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800"
-              : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800"
-          }`}
+        <Alert
+          variant={message.type === "error" ? "destructive" : "default"}
+          className={message.type === "success" ? "border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-900/20 dark:text-green-200" : ""}
         >
-          {message.text}
-        </div>
+          {message.type === "success" ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <AlertCircle className="h-4 w-4" />
+          )}
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
       )}
 
       {/* Form */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <div className="p-6 space-y-6">
-          {children(settings, updateSettings)}
-        </div>
+      <Card className="shadow-airbnb">
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            {children(settings, updateSettings)}
+          </div>
+        </CardContent>
 
         {/* Actions */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
-          <button
+        <CardFooter className="bg-muted/30 flex justify-end gap-3">
+          <Button
+            variant="outline"
             onClick={() => router.back()}
-            className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="gap-2"
           >
+            <X className="h-4 w-4" />
             {t("admin.cancel")}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="gap-2"
           >
-            {saving && (
-              <svg
-                className="animate-spin h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
+            {saving ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("admin.saving")}
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                {t("admin.saveChanges")}
+              </>
             )}
-            {saving ? t("admin.saving") : t("admin.saveChanges")}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

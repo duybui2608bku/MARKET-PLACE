@@ -3,6 +3,8 @@
 import { useT } from "@/i18n/provider";
 import AdminSettingsForm from "@/components/admin/AdminSettingsForm";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function BrandingSettingsPage() {
   const t = useT();
@@ -23,17 +25,17 @@ export default function BrandingSettingsPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="logo_text">
               {t("admin.branding.logoText")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="logo_text"
               type="text"
               value={settings.logo_text || ""}
               onChange={(e) =>
                 updateSettings({ logo_text: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="MarketPlace"
             />
           </div>

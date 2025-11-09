@@ -2,6 +2,9 @@
 
 import { useT } from "@/i18n/provider";
 import AdminSettingsForm from "@/components/admin/AdminSettingsForm";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function HeaderSettingsPage() {
   const t = useT();
@@ -13,62 +16,60 @@ export default function HeaderSettingsPage() {
     >
       {(settings, updateSettings) => (
         <>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="header_bg_color">
               {t("admin.header.headerBgColor")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="header_bg_color"
               type="text"
               value={settings.header_bg_color || ""}
               onChange={(e) =>
                 updateSettings({ header_bg_color: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="#ffffff"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="header_text_color">
               {t("admin.header.headerTextColor")}
-            </label>
-            <input
+            </Label>
+            <Input
+              id="header_text_color"
               type="text"
               value={settings.header_text_color || ""}
               onChange={(e) =>
                 updateSettings({ header_text_color: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="#000000"
             />
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="show_language_switcher"
               checked={settings.show_language_switcher ?? true}
-              onChange={(e) =>
-                updateSettings({ show_language_switcher: e.target.checked })
+              onCheckedChange={(checked) =>
+                updateSettings({ show_language_switcher: !!checked })
               }
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+            <Label htmlFor="show_language_switcher" className="font-normal cursor-pointer">
               {t("admin.header.showLanguageSwitcher")}
-            </label>
+            </Label>
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="show_theme_toggle"
               checked={settings.show_theme_toggle ?? true}
-              onChange={(e) =>
-                updateSettings({ show_theme_toggle: e.target.checked })
+              onCheckedChange={(checked) =>
+                updateSettings({ show_theme_toggle: !!checked })
               }
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+            <Label htmlFor="show_theme_toggle" className="font-normal cursor-pointer">
               {t("admin.header.showThemeToggle")}
-            </label>
+            </Label>
           </div>
         </>
       )}
