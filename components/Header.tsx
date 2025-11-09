@@ -8,6 +8,28 @@ import { useT, useLocale } from "@/i18n/provider";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { getCurrentUser, User } from "@/lib/users";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Moon,
+  Sun,
+  Globe,
+  User as UserIcon,
+  Settings,
+  LogOut,
+  Menu,
+  ChevronDown
+} from "lucide-react";
 
 export default function Header() {
   const t = useT();
@@ -115,310 +137,285 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 dark:bg-black/80 dark:border-gray-800">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo - Left Side */}
           <Link
             href={`/${locale || "vi"}`}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 transition-opacity hover:opacity-80"
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-lg">M</span>
             </div>
-            <span className="text-xl font-semibold text-gray-900 dark:text-white">
+            <span className="text-xl font-bold text-foreground hidden sm:inline-block">
               MarketPlace
             </span>
           </Link>
 
-          {/* Right Side - Icons and Buttons */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Right Side - Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-2">
             {/* Theme Toggle */}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label={t("Header.toggleTheme", "Toggle theme")}
               suppressHydrationWarning
+              className="rounded-full"
             >
-              {theme === null ? (
-                // Placeholder during hydration
-                <svg
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  />
-                </svg>
-              ) : theme === "light" ? (
-                <svg
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  />
-                </svg>
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
               ) : (
-                <svg
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
+                <Moon className="h-5 w-5" />
               )}
-            </button>
+            </Button>
 
             {/* Language Switcher */}
-            <div className="relative">
-              <button
-                onClick={() => setShowLangMenu(!showLangMenu)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1"
-                aria-label={t("Header.changeLanguage", "Change language")}
-              >
-                <svg
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
-                  />
-                </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:inline">
-                  {locale?.toUpperCase() || "EN"}
-                </span>
-              </button>
-
-              {/* Language Dropdown */}
-              {showLangMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                  {SUPPORTED_LOCALES.map((loc) => (
-                    <button
-                      key={loc}
-                      onClick={() => {
-                        switchLocale(loc);
-                        setShowLangMenu(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                        locale === loc
-                          ? "text-blue-600 dark:text-blue-400 font-medium"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      {localeNames[loc]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Divider */}
-            <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 hidden sm:block" />
+            <DropdownMenu open={showLangMenu} onOpenChange={setShowLangMenu}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-1 rounded-full">
+                  <Globe className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    {locale?.toUpperCase() || "EN"}
+                  </span>
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {SUPPORTED_LOCALES.map((loc) => (
+                  <DropdownMenuItem
+                    key={loc}
+                    onClick={() => switchLocale(loc)}
+                    className={locale === loc ? "bg-accent" : ""}
+                  >
+                    {localeNames[loc]}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Authentication Buttons */}
             {loading ? (
               // Loading placeholder
-              <div className="w-24 h-9 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              <div className="h-10 w-24 animate-pulse rounded-full bg-muted" />
             ) : user ? (
               // User Menu (when logged in)
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  {/* Avatar */}
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
-                    {user.avatar_url ? (
-                      <Image
-                        src={user.avatar_url}
+              <DropdownMenu open={showUserMenu} onOpenChange={setShowUserMenu}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 gap-2 rounded-full px-3"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={user.avatar_url || ""}
                         alt={user.full_name || user.email}
-                        fill
-                        className="object-cover"
-                        sizes="32px"
                       />
-                    ) : (
-                      <span>
+                      <AvatarFallback className="bg-primary text-primary-foreground">
                         {user.full_name?.[0]?.toUpperCase() ||
                           user.email[0].toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  {/* User name (hidden on mobile) */}
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:inline">
-                    {user.full_name || user.email.split("@")[0]}
-                  </span>
-                  {/* Dropdown icon */}
-                  <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {/* User Dropdown Menu */}
-                {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                    {/* User Info */}
-                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="hidden lg:inline-block text-sm font-medium">
+                      {user.full_name || user.email.split("@")[0]}
+                    </span>
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">
                         {user.full_name || user.email}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      <p className="text-xs text-muted-foreground">
                         {user.email}
                       </p>
-                      <span
-                        className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${
-                          user.role === "worker"
-                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                            : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
-                        }`}
+                      <Badge
+                        variant={user.role === "admin" ? "default" : "secondary"}
+                        className="w-fit mt-1"
                       >
                         {user.role === "worker"
                           ? t("Header.worker", "Worker")
+                          : user.role === "admin"
+                          ? t("Header.admin", "Admin")
                           : t("Header.employer", "Employer")}
-                      </span>
+                      </Badge>
                     </div>
-
-                    {/* Menu Items */}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/${locale || "vi"}/profile/${user.role}`}
-                      onClick={() => setShowUserMenu(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className="cursor-pointer"
                     >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+                      <UserIcon className="mr-2 h-4 w-4" />
                       {t("Header.myProfile", "My Profile")}
                     </Link>
-
-                    {/* Admin Panel Link (only for admins) */}
-                    {user.role === "admin" && (
+                  </DropdownMenuItem>
+                  {user.role === "admin" && (
+                    <DropdownMenuItem asChild>
                       <Link
                         href={`/${locale || "vi"}/admin`}
-                        onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-purple-600 dark:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="cursor-pointer text-primary"
                       >
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
+                        <Settings className="mr-2 h-4 w-4" />
                         {t("Header.adminPanel", "Admin Panel")}
                       </Link>
-                    )}
-
-                    {/* Divider */}
-                    <div className="h-px bg-gray-200 dark:bg-gray-700 my-1" />
-
-                    {/* Logout Button */}
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
-                      {t("Header.logout", "Logout")}
-                    </button>
-                  </div>
-                )}
-              </div>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t("Header.logout", "Logout")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               // Sign In & Get Started buttons (when not logged in)
               <>
-                <Link
-                  href={`/${locale || "vi"}/login`}
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hidden sm:inline-block"
-                >
-                  {t("Header.signIn", "Sign In")}
-                </Link>
-
-                <Link
-                  href={`/${locale || "vi"}/register`}
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md"
-                >
-                  {t("Header.getStarted", "Get Started")}
-                </Link>
+                <Button variant="ghost" size="sm" asChild className="rounded-full">
+                  <Link href={`/${locale || "vi"}/login`}>
+                    {t("Header.signIn", "Sign In")}
+                  </Link>
+                </Button>
+                <Button size="sm" asChild className="rounded-full shadow-sm">
+                  <Link href={`/${locale || "vi"}/register`}>
+                    {t("Header.getStarted", "Get Started")}
+                  </Link>
+                </Button>
               </>
             )}
           </div>
+
+          {/* Mobile Navigation */}
+          <div className="flex md:hidden items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label={t("Header.toggleTheme", "Toggle theme")}
+              suppressHydrationWarning
+              className="rounded-full"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Button>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <div className="flex flex-col gap-4 mt-8">
+                  {/* User Section */}
+                  {user && (
+                    <div className="flex items-center gap-3 pb-4 border-b">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage
+                          src={user.avatar_url || ""}
+                          alt={user.full_name || user.email}
+                        />
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {user.full_name?.[0]?.toUpperCase() ||
+                            user.email[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium">
+                          {user.full_name || user.email.split("@")[0]}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Language Selector */}
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">
+                      {t("Header.language", "Language")}
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {SUPPORTED_LOCALES.map((loc) => (
+                        <Button
+                          key={loc}
+                          variant={locale === loc ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => switchLocale(loc)}
+                          className="justify-start"
+                        >
+                          {localeNames[loc]}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Menu Items */}
+                  {user ? (
+                    <div className="space-y-1 pt-4">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        asChild
+                      >
+                        <Link href={`/${locale || "vi"}/profile/${user.role}`}>
+                          <UserIcon className="mr-2 h-4 w-4" />
+                          {t("Header.myProfile", "My Profile")}
+                        </Link>
+                      </Button>
+                      {user.role === "admin" && (
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start text-primary"
+                          asChild
+                        >
+                          <Link href={`/${locale || "vi"}/admin`}>
+                            <Settings className="mr-2 h-4 w-4" />
+                            {t("Header.adminPanel", "Admin Panel")}
+                          </Link>
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-destructive"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        {t("Header.logout", "Logout")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 pt-4">
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link href={`/${locale || "vi"}/login`}>
+                          {t("Header.signIn", "Sign In")}
+                        </Link>
+                      </Button>
+                      <Button className="w-full" asChild>
+                        <Link href={`/${locale || "vi"}/register`}>
+                          {t("Header.getStarted", "Get Started")}
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </nav>
-
-      {/* Click outside to close menus */}
-      {(showLangMenu || showUserMenu) && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => {
-            setShowLangMenu(false);
-            setShowUserMenu(false);
-          }}
-        />
-      )}
     </header>
   );
 }
