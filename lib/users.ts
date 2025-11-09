@@ -1,4 +1,4 @@
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import {
   Result,
@@ -12,7 +12,7 @@ import {
  * User Data Types
  */
 
-export type UserRole = "worker" | "employer";
+export type UserRole = "worker" | "employer" | "admin";
 
 export interface User {
   id: string;
@@ -32,7 +32,7 @@ export interface User {
 
 export async function getUserById(userId: string): Promise<Result<User>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -73,7 +73,7 @@ export async function getUserById(userId: string): Promise<Result<User>> {
 
 export async function getUserByEmail(email: string): Promise<Result<User>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -114,7 +114,7 @@ export async function getUserByEmail(email: string): Promise<Result<User>> {
 
 export async function getWorkers(limit = 50): Promise<User[]> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("workers")
       .select("*")
@@ -134,7 +134,7 @@ export async function getWorkers(limit = 50): Promise<User[]> {
 
 export async function getEmployers(limit = 50): Promise<User[]> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("employers")
       .select("*")
@@ -157,7 +157,7 @@ export async function updateUserProfile(
   updates: Partial<Omit<User, "id" | "email" | "created_at" | "updated_at">>
 ): Promise<Result<User>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("users")
       .update(updates)

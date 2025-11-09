@@ -1,40 +1,48 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as
-  | string
-  | undefined;
+/**
+ * Create a Supabase client for API routes
+ * This creates a client that can authenticate users from request headers
+ */
+export function createClient(accessToken?: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export function getSupabaseAdmin() {
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error(
-      "Missing SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL"
-    );
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Missing Supabase environment variables");
   }
-  return createClient(supabaseUrl, serviceRoleKey, {
+
+  const client = createSupabaseClient(supabaseUrl, supabaseKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
   });
+
+  // If access token is provided, set it for this client
+  if (accessToken) {
+    client.auth.setSession({
+      access_token: accessToken,
+      refresh_token: "",
+    });
+  }
+
+  return client;
 }
 
-export function getSupabaseWithBearer(authorizationHeader?: string | null) {
-  if (!supabaseUrl) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
+/**
+ * Create a Supabase admin client with service role key
+ * Use this for operations that need to bypass RLS
+ */
+export function createAdminClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase admin credentials");
   }
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as
-    | string
-    | undefined;
-  if (!anonKey) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
-  }
-  return createClient(supabaseUrl, anonKey, {
-    global: {
-      headers: authorizationHeader
-        ? { Authorization: authorizationHeader }
-        : {},
-    },
+
+  return createSupabaseClient(supabaseUrl, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

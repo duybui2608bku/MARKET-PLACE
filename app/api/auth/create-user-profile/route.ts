@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 
 /**
  * API Route: Create User Profile
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Sử dụng Admin client để insert (bypass RLS)
-    const supabaseAdmin = getSupabaseAdmin();
+    const supabaseAdmin = createAdminClient();
 
     // 5. Check nếu user đã tồn tại
     const { data: existingUser } = await supabaseAdmin
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const supabaseAdmin = getSupabaseAdmin();
+    const supabaseAdmin = createAdminClient();
     const { data: user, error } = await supabaseAdmin
       .from("users")
       .select("*")

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase/client";
@@ -15,6 +15,58 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setIsLoggedIn(true);
+      }
+    };
+    checkAuth();
+  }, [supabase]);
+
+  // If already logged in, show message instead of form
+  if (isLoggedIn) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-zinc-50 via-white to-zinc-50 dark:from-black dark:via-zinc-950 dark:to-black px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="rounded-2xl border border-black/10 bg-white p-8 shadow-lg dark:border-white/15 dark:bg-zinc-950 text-center">
+            <div className="mx-auto mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-8 h-8 text-blue-600 dark:text-blue-400"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">
+              Bạn đã đăng nhập rồi
+            </h2>
+            <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+              Bạn đang trong phiên đăng nhập. Vui lòng đăng xuất nếu muốn đăng nhập tài khoản khác.
+            </p>
+            <Link
+              href={`/${locale}`}
+              className="inline-block w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-3 text-center font-medium text-white transition-all hover:shadow-lg hover:shadow-purple-500/50"
+            >
+              Về trang chủ
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   async function handleEmailLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

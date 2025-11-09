@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 
 const adminSecret = process.env.ADMIN_SECRET as string | undefined;
 
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase.auth.admin.listUsers();
     if (error) {
       return Response.json({ error: error.message }, { status: 500 });

@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  getAdminSettings,
-  updateAdminSettings,
-  isUserAdmin,
+  getAdminSettingsServer,
+  updateAdminSettingsServer,
+  isUserAdminServer,
 } from "@/lib/admin-settings";
+import { getAuthenticatedUser } from "@/lib/supabase/auth-helpers";
 
 /**
  * GET /api/admin/settings
  * Get current admin settings (public endpoint)
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const settings = await getAdminSettings();
+    const settings = await getAdminSettingsServer();
 
     if (!settings) {
       return NextResponse.json(
@@ -36,8 +37,18 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    // Get authenticated user
+    const { user, error: authError } = await getAuthenticatedUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: authError || "Unauthorized - Authentication required" },
+        { status: 401 }
+      );
+    }
+
     // Check if user is admin
-    const isAdmin = await isUserAdmin();
+    const isAdmin = await isUserAdminServer(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
@@ -49,7 +60,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Update settings
-    const result = await updateAdminSettings(body);
+    const result = await updateAdminSettingsServer(body, user.id);
 
     if (!result.success) {
       return NextResponse.json(
@@ -74,8 +85,18 @@ export async function POST(request: NextRequest) {
  */
 export async function PATCH(request: NextRequest) {
   try {
+    // Get authenticated user
+    const { user, error: authError } = await getAuthenticatedUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: authError || "Unauthorized - Authentication required" },
+        { status: 401 }
+      );
+    }
+
     // Check if user is admin
-    const isAdmin = await isUserAdmin();
+    const isAdmin = await isUserAdminServer(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
@@ -87,7 +108,7 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
 
     // Update settings
-    const result = await updateAdminSettings(body);
+    const result = await updateAdminSettingsServer(body, user.id);
 
     if (!result.success) {
       return NextResponse.json(
@@ -97,7 +118,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Get updated settings
-    const settings = await getAdminSettings();
+    const settings = await getAdminSettingsServer();
 
     return NextResponse.json({ success: true, data: settings });
   } catch (error) {

@@ -275,6 +275,35 @@
 
 ---
 
+## 🔧 Recent Fixes (November 9, 2025)
+
+### Authentication Pages - Logged-in User Redirect Fix
+
+**Issue:** Người dùng đã đăng nhập vẫn có thể truy cập trang `/register` và `/login`
+
+**Root Cause:** 
+- Trang login và register không kiểm tra authentication status
+- Không có redirect logic cho logged-in users
+
+**Fix Applied:**
+- ✅ Added `useEffect` hook to check session on page load
+- ✅ Show friendly message UI for authenticated users (NO auto-redirect)
+- ✅ Applied to both `/login` and `/register` pages
+- ✅ User-controlled navigation with "Về trang chủ" button
+
+**Files Modified:**
+- `app/[locale]/(auth)/login/page.tsx`
+- `app/[locale]/(auth)/register/page.tsx`
+- `memory-bank/activeContext.md`
+
+**Behavior Now:**
+- Logged-in users at `/login` → See message "Bạn đã đăng nhập rồi" with home button
+- Logged-in users at `/register` → See message "Bạn không thể đăng ký tài khoản mới" with home button
+- Unauthenticated users → can access login/register normally
+- **No automatic redirect** - user stays in control
+
+---
+
 ## 📊 Statistics
 
 - **Total Features Completed:** 5

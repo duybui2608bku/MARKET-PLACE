@@ -246,43 +246,97 @@
     "terms": "服务条款",
     "contact": "联系"
   },
-  "Admin": {
+  "admin": {
     "title": "管理面板",
     "subtitle": "管理您的网站设置、SEO、品牌等",
-    "seoTab": "SEO设置",
-    "brandingTab": "徽标和品牌",
-    "headerTab": "页眉",
-    "footerTab": "页脚",
-    "contactTab": "联系信息",
-    "socialTab": "社交媒体",
-    "seoSettings": "SEO设置",
-    "siteTitle": "网站标题",
-    "siteDescription": "网站描述",
-    "siteKeywords": "网站关键词（逗号分隔）",
-    "ogImage": "OG 图片链接",
-    "brandingSettings": "徽标和品牌",
-    "logoUrl": "徽标链接",
-    "logoText": "徽标文字",
-    "faviconUrl": "图标链接",
-    "headerSettings": "页眉设置",
-    "headerBgColor": "页眉背景色",
-    "headerTextColor": "页眉文字颜色",
-    "showLanguageSwitcher": "显示语言切换器",
-    "showThemeToggle": "显示主题切换",
-    "footerSettings": "页脚设置",
-    "enableFooter": "启用页脚",
-    "footerText": "页脚版权文字",
-    "footerBgColor": "页脚背景色",
-    "termsUrl": "服务条款链接",
-    "privacyUrl": "隐私政策链接",
-    "contactSettings": "联系信息",
-    "contactEmail": "联系邮箱",
-    "contactPhone": "联系电话",
-    "contactAddress": "联系地址",
-    "socialSettings": "社交媒体链接",
+    "backToSite": "返回网站",
+    "menu": {
+      "dashboard": "仪表盘",
+      "settings": "设置",
+      "seo": "SEO",
+      "branding": "品牌",
+      "header": "页眉",
+      "footer": "页脚",
+      "contact": "联系",
+      "social": "社交媒体",
+      "users": "用户"
+    },
+    "dashboard": {
+      "title": "仪表盘",
+      "subtitle": "网站概览",
+      "welcome": "欢迎来到管理面板",
+      "totalUsers": "总用户数",
+      "totalSettings": "总设置数",
+      "activeFeatures": "活动功能",
+      "quickLinks": "快速链接"
+    },
+    "seo": {
+      "title": "SEO设置",
+      "subtitle": "管理SEO和元数据",
+      "siteTitle": "网站标题",
+      "siteDescription": "网站描述",
+      "siteKeywords": "网站关键词（逗号分隔）",
+      "ogImage": "OG 图片链接",
+      "uploadOgImage": "上传OG图片"
+    },
+    "branding": {
+      "title": "徽标和品牌",
+      "subtitle": "管理徽标和品牌识别",
+      "logoUrl": "徽标链接",
+      "logoText": "徽标文字",
+      "faviconUrl": "图标链接",
+      "uploadLogo": "上传徽标",
+      "uploadFavicon": "上传图标"
+    },
+    "header": {
+      "title": "页眉设置",
+      "subtitle": "自定义网站页眉",
+      "headerBgColor": "页眉背景色",
+      "headerTextColor": "页眉文字颜色",
+      "showLanguageSwitcher": "显示语言切换器",
+      "showThemeToggle": "显示主题切换"
+    },
+    "footer": {
+      "title": "页脚设置",
+      "subtitle": "自定义网站页脚",
+      "enableFooter": "启用页脚",
+      "footerText": "页脚版权文字",
+      "footerBgColor": "页脚背景色",
+      "termsUrl": "服务条款链接",
+      "privacyUrl": "隐私政策链接"
+    },
+    "contact": {
+      "title": "联系信息",
+      "subtitle": "管理联系方式",
+      "contactEmail": "联系邮箱",
+      "contactPhone": "联系电话",
+      "contactAddress": "联系地址"
+    },
+    "social": {
+      "title": "社交媒体链接",
+      "subtitle": "管理社交媒体链接",
+      "facebook": "Facebook URL",
+      "twitter": "Twitter URL",
+      "instagram": "Instagram URL",
+      "linkedin": "LinkedIn URL",
+      "youtube": "YouTube URL"
+    },
+    "users": {
+      "title": "用户管理",
+      "subtitle": "查看和管理用户"
+    },
     "saveChanges": "保存更改",
     "cancel": "取消",
+    "saving": "保存中...",
     "saveSuccess": "设置保存成功！",
-    "saveError": "保存设置失败"
+    "saveError": "保存设置失败",
+    "upload": {
+      "dragDrop": "将图片拖放到此处或单击选择",
+      "uploading": "上传中...",
+      "success": "上传成功！",
+      "error": "上传失败",
+      "maxSize": "最大大小：5MB",
+      "supportedFormats": "支持的格式：JPG、PNG、GIF、WebP"
+    }
   }
 }

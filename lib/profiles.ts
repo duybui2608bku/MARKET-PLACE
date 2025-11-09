@@ -1,4 +1,4 @@
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import {
   Result,
@@ -130,7 +130,7 @@ export async function getWorkerProfile(
   userId: string
 ): Promise<Result<WorkerProfile>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("worker_profiles")
       .select("*")
@@ -178,7 +178,7 @@ export async function getEmployerProfile(
   userId: string
 ): Promise<Result<EmployerProfile>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("employer_profiles")
       .select("*")
@@ -224,7 +224,7 @@ export async function getWorkerProfileWithUser(
   userId: string
 ): Promise<Result<WorkerProfileWithUser>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("worker_profiles_with_user")
       .select("*")
@@ -270,7 +270,7 @@ export async function getEmployerProfileWithUser(
   userId: string
 ): Promise<Result<EmployerProfileWithUser>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("employer_profiles_with_user")
       .select("*")
@@ -317,7 +317,7 @@ export async function updateWorkerProfile(
   updates: Partial<Omit<WorkerProfile, "id" | "created_at" | "updated_at">>
 ): Promise<Result<WorkerProfile>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("worker_profiles")
       .update(updates)
@@ -365,7 +365,7 @@ export async function updateEmployerProfile(
   updates: Partial<Omit<EmployerProfile, "id" | "created_at" | "updated_at">>
 ): Promise<Result<EmployerProfile>> {
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("employer_profiles")
       .update(updates)

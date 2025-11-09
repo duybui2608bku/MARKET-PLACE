@@ -1,5 +1,4 @@
-import { getSupabaseClient } from "./supabase/client";
-import { createClient } from "@supabase/supabase-js";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 export interface AdminSettings {
   id: string;
@@ -58,26 +57,24 @@ export interface AdminSettings {
 
 /**
  * Get admin settings (public - no auth required)
+ * This version is for client-side use
  */
 export async function getAdminSettings(): Promise<AdminSettings | null> {
-  const supabase = getSupabaseClient();
-
-  const { data, error } = await supabase
-    .from("admin_settings")
-    .select("*")
-    .limit(1)
-    .single();
-
-  if (error) {
+  try {
+    const response = await fetch("/api/admin/settings");
+    if (!response.ok) {
+      console.error("Error fetching admin settings:", response.statusText);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
     console.error("Error fetching admin settings:", error);
     return null;
   }
-
-  return data;
 }
 
 /**
- * Get admin settings server-side (for Next.js server components)
+ * Get admin settings server-side (for Next.js server components and API routes)
  */
 export async function getAdminSettingsServer(): Promise<AdminSettings | null> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -85,7 +82,7 @@ export async function getAdminSettingsServer(): Promise<AdminSettings | null> {
     return null;
   }
 
-  const supabase = createClient(
+  const supabase = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
@@ -106,26 +103,26 @@ export async function getAdminSettingsServer(): Promise<AdminSettings | null> {
 
 /**
  * Update admin settings (requires admin auth)
+ * This version is for server-side use (API routes)
  */
-export async function updateAdminSettings(
-  settings: Partial<AdminSettings>
+export async function updateAdminSettingsServer(
+  settings: Partial<AdminSettings>,
+  userId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = getSupabaseClient();
-
-  // Get current user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { success: false, error: "Not authenticated" };
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { success: false, error: "Supabase environment variables not found" };
   }
+
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 
   // Check if user is admin
   const { data: userData, error: userError } = await supabase
     .from("users")
     .select("role")
-    .eq("id", user.id)
+    .eq("id", userId)
     .single();
 
   if (userError || userData?.role !== "admin") {
@@ -149,7 +146,7 @@ export async function updateAdminSettings(
     .update({
       ...settings,
       updated_at: new Date().toISOString(),
-      updated_by: user.id,
+      updated_by: userId,
     })
     .eq("id", existingSettings.id);
 
@@ -162,21 +159,22 @@ export async function updateAdminSettings(
 }
 
 /**
- * Check if current user is admin
+ * Check if user is admin (server-side)
  */
-export async function isUserAdmin(): Promise<boolean> {
-  const supabase = getSupabaseClient();
+export async function isUserAdminServer(userId: string): Promise<boolean> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return false;
+  }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return false;
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 
   const { data, error } = await supabase
     .from("users")
     .select("role")
-    .eq("id", user.id)
+    .eq("id", userId)
     .single();
 
   if (error || !data) return false;
