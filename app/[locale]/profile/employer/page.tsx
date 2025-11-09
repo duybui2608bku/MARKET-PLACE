@@ -12,6 +12,32 @@ import {
 } from "@/lib/profiles";
 import { useT } from "@/i18n/provider";
 import AvatarUpload from "@/components/AvatarUpload";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Loader2,
+  Building,
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  FileText,
+  Briefcase,
+  Users,
+  ShieldCheck,
+  Edit,
+  X,
+  Save,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
 export default function EmployerProfilePage() {
   const supabase = getSupabaseClient();
@@ -154,7 +180,7 @@ export default function EmployerProfilePage() {
         setProfile(updatedProfile);
         setMessage(t("Profile.updateSuccess"));
         setIsEditMode(false);
-        
+
         // Refresh user data
         const userData = await getCurrentUser();
         if (userData) {
@@ -173,10 +199,10 @@ export default function EmployerProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-muted/30">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
+          <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -184,9 +210,9 @@ export default function EmployerProfilePage() {
 
   if (!user || !profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-muted/30">
         <div className="text-center">
-          <p className="text-red-500">Failed to load profile</p>
+          <p className="text-destructive">Failed to load profile</p>
         </div>
       </div>
     );
@@ -195,393 +221,419 @@ export default function EmployerProfilePage() {
   const completion = calculateProfileCompletion(profile, "employer");
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-          <div className="flex items-start justify-between flex-wrap gap-6">
-            {/* Avatar and Basic Info */}
-            <div className="flex items-center space-x-6 flex-1">
-              <AvatarUpload
-                currentAvatarUrl={user.avatar_url}
-                onUploadComplete={handleAvatarUpload}
-                onUploadError={handleAvatarError}
-                size="lg"
-              />
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {formData.company_name || user.full_name || user.email}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">{t("Profile.employerProfile")}</p>
-                <div className="flex items-center mt-2 space-x-3">
-                  <span
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      profile.is_verified
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                        : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    {profile.is_verified ? t("Profile.verified") : t("Profile.notVerified")}
-                  </span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("Profile.completion")}: {completion}%
-                  </span>
+    <div className="min-h-screen bg-muted/30 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header Card */}
+        <Card className="shadow-airbnb">
+          <CardHeader>
+            <div className="flex items-start justify-between flex-wrap gap-6">
+              {/* Avatar and Basic Info */}
+              <div className="flex items-center space-x-6 flex-1">
+                <AvatarUpload
+                  currentAvatarUrl={user.avatar_url}
+                  onUploadComplete={handleAvatarUpload}
+                  onUploadError={handleAvatarError}
+                  size="lg"
+                />
+                <div className="flex-1">
+                  <CardTitle className="text-2xl">
+                    {formData.company_name || user.full_name || user.email}
+                  </CardTitle>
+                  <CardDescription className="mt-1">
+                    {t("Profile.employerProfile")}
+                  </CardDescription>
+                  <div className="flex items-center mt-3 gap-3">
+                    <Badge variant={profile.is_verified ? "secondary" : "outline"} className={profile.is_verified ? "gap-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200" : ""}>
+                      {profile.is_verified && <ShieldCheck className="h-3 w-3" />}
+                      {profile.is_verified ? t("Profile.verified") : t("Profile.notVerified")}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {t("Profile.completion")}: {completion}%
+                    </span>
+                  </div>
                 </div>
               </div>
+              <div>
+                {!isEditMode ? (
+                  <Button onClick={() => setIsEditMode(true)} className="gap-2">
+                    <Edit className="h-4 w-4" />
+                    {t("Profile.edit")}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsEditMode(false);
+                      setError(null);
+                      setMessage(null);
+                    }}
+                    className="gap-2"
+                  >
+                    <X className="h-4 w-4" />
+                    {t("Profile.cancel")}
+                  </Button>
+                )}
+              </div>
             </div>
-            <div>
-              {!isEditMode ? (
-                <button
-                  onClick={() => setIsEditMode(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                >
-                  {t("Profile.edit")}
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsEditMode(false);
-                    setError(null);
-                    setMessage(null);
-                  }}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
-                >
-                  {t("Profile.cancel")}
-                </button>
-              )}
-            </div>
-          </div>
 
-          {/* Progress bar */}
-          <div className="mt-4">
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div
-                className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${completion}%` }}
-              ></div>
+            {/* Progress bar */}
+            <div className="mt-6">
+              <div className="w-full bg-muted rounded-full h-2.5">
+                <div
+                  className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                  style={{ width: `${completion}%` }}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </CardHeader>
+        </Card>
 
         {/* Messages */}
         {message && (
-          <div className="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded-lg mb-6">
-            {message}
-          </div>
+          <Alert className="border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-900/20 dark:text-green-200">
+            <CheckCircle2 className="h-4 w-4" />
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
         )}
 
         {error && (
-          <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.basicInfo")}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.fullName")}
-                </label>
-                <input
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                {t("Profile.basicInfo")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="full_name">{t("Profile.fullName")}</Label>
+                <Input
+                  id="full_name"
                   type="text"
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                   disabled={!isEditMode}
                   placeholder="Your name"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.email")}
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("Profile.email")}</Label>
+                <Input
+                  id="email"
                   type="email"
                   value={user.email}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="bg-muted"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.phone")}
-                </label>
-                <input
-                  type="text"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  disabled={!isEditMode}
-                  placeholder="+84..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                />
+              <div className="space-y-2">
+                <Label htmlFor="phone">{t("Profile.phone")}</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="phone"
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    disabled={!isEditMode}
+                    placeholder="+84..."
+                    className="pl-10"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Company Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.companyInfo")}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.companyName")} <span className="text-red-500">*</span>
-                </label>
-                <input
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building className="h-5 w-5 text-primary" />
+                {t("Profile.companyInfo")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="company_name">
+                  {t("Profile.companyName")} <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="company_name"
                   type="text"
                   value={formData.company_name}
                   onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
                   disabled={!isEditMode}
                   placeholder={t("Profile.companyNamePlaceholder")}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.companyDescription")}
-                </label>
-                <textarea
+              <div className="space-y-2">
+                <Label htmlFor="company_description">{t("Profile.companyDescription")}</Label>
+                <Textarea
+                  id="company_description"
                   value={formData.company_description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, company_description: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, company_description: e.target.value })}
                   disabled={!isEditMode}
                   rows={4}
                   placeholder={t("Profile.companyDescriptionPlaceholder")}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("Profile.industry")}
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                    disabled={!isEditMode}
-                    placeholder={t("Profile.industryPlaceholder")}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="industry">{t("Profile.industry")}</Label>
+                  <div className="relative">
+                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="industry"
+                      type="text"
+                      value={formData.industry}
+                      onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                      disabled={!isEditMode}
+                      placeholder={t("Profile.industryPlaceholder")}
+                      className="pl-10"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("Profile.companySize")}
-                  </label>
-                  <select
+                <div className="space-y-2">
+                  <Label htmlFor="company_size">{t("Profile.companySize")}</Label>
+                  <Select
                     value={formData.company_size}
-                    onChange={(e) => setFormData({ ...formData, company_size: e.target.value })}
+                    onValueChange={(value) => setFormData({ ...formData, company_size: value })}
                     disabled={!isEditMode}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                   >
-                    <option value="">Select size...</option>
-                    <option value="small">{t("Profile.companySize_small")}</option>
-                    <option value="medium">{t("Profile.companySize_medium")}</option>
-                    <option value="large">{t("Profile.companySize_large")}</option>
-                  </select>
+                    <SelectTrigger id="company_size">
+                      <SelectValue placeholder="Select size..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="small">{t("Profile.companySize_small")}</SelectItem>
+                      <SelectItem value="medium">{t("Profile.companySize_medium")}</SelectItem>
+                      <SelectItem value="large">{t("Profile.companySize_large")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Location */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.location")}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.address")}
-                </label>
-                <input
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                {t("Profile.location")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="address">{t("Profile.address")}</Label>
+                <Input
+                  id="address"
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   disabled={!isEditMode}
                   placeholder={t("Profile.addressPlaceholder")}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("Profile.city")}
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="city">{t("Profile.city")}</Label>
+                  <Input
+                    id="city"
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                     disabled={!isEditMode}
                     placeholder={t("Profile.cityPlaceholder")}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("Profile.district")}
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="district">{t("Profile.district")}</Label>
+                  <Input
+                    id="district"
                     type="text"
                     value={formData.district}
                     onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                     disabled={!isEditMode}
                     placeholder={t("Profile.districtPlaceholder")}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
                   />
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Company Contact */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.companyContact")}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.companyPhone")}
-                </label>
-                <input
-                  type="text"
-                  value={formData.company_phone}
-                  onChange={(e) => setFormData({ ...formData, company_phone: e.target.value })}
-                  disabled={!isEditMode}
-                  placeholder="+84..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                />
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5 text-primary" />
+                {t("Profile.companyContact")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="company_phone">{t("Profile.companyPhone")}</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="company_phone"
+                    type="text"
+                    value={formData.company_phone}
+                    onChange={(e) => setFormData({ ...formData, company_phone: e.target.value })}
+                    disabled={!isEditMode}
+                    placeholder="+84..."
+                    className="pl-10"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.companyEmail")}
-                </label>
-                <input
-                  type="email"
-                  value={formData.company_email}
-                  onChange={(e) => setFormData({ ...formData, company_email: e.target.value })}
-                  disabled={!isEditMode}
-                  placeholder="company@example.com"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                />
+              <div className="space-y-2">
+                <Label htmlFor="company_email">{t("Profile.companyEmail")}</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="company_email"
+                    type="email"
+                    value={formData.company_email}
+                    onChange={(e) => setFormData({ ...formData, company_email: e.target.value })}
+                    disabled={!isEditMode}
+                    placeholder="company@example.com"
+                    className="pl-10"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.companyWebsite")}
-                </label>
-                <input
-                  type="url"
-                  value={formData.website_url}
-                  onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
-                  disabled={!isEditMode}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                />
+              <div className="space-y-2">
+                <Label htmlFor="website_url">{t("Profile.companyWebsite")}</Label>
+                <div className="relative">
+                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="website_url"
+                    type="url"
+                    value={formData.website_url}
+                    onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+                    disabled={!isEditMode}
+                    placeholder="https://..."
+                    className="pl-10"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Verification */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.verification")}
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("Profile.taxCode")}
-                </label>
-                <input
-                  type="text"
-                  value={formData.tax_code}
-                  onChange={(e) => setFormData({ ...formData, tax_code: e.target.value })}
-                  disabled={!isEditMode}
-                  placeholder={t("Profile.taxCodePlaceholder")}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                />
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+                {t("Profile.verification")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="tax_code">{t("Profile.taxCode")}</Label>
+                <div className="relative">
+                  <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="tax_code"
+                    type="text"
+                    value={formData.tax_code}
+                    onChange={(e) => setFormData({ ...formData, tax_code: e.target.value })}
+                    disabled={!isEditMode}
+                    placeholder={t("Profile.taxCodePlaceholder")}
+                    className="pl-10"
+                  />
+                </div>
               </div>
 
               {profile.business_license && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("Profile.businessLicense")}
-                  </label>
-                  <a
-                    href={profile.business_license}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                  >
-                    View License
-                  </a>
+                <div className="space-y-2">
+                  <Label>{t("Profile.businessLicense")}</Label>
+                  <Button variant="link" className="h-auto p-0" asChild>
+                    <a
+                      href={profile.business_license}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View License
+                    </a>
+                  </Button>
                 </div>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("Profile.companyStats")}
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                  {profile.total_jobs_posted}
+          <Card className="shadow-airbnb">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Briefcase className="h-5 w-5 text-primary" />
+                {t("Profile.companyStats")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center p-6 bg-primary/10 rounded-lg">
+                  <div className="text-4xl font-bold text-primary">
+                    {profile.total_jobs_posted}
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">
+                    {t("Profile.totalJobsPosted")}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  {t("Profile.totalJobsPosted")}
+                <div className="text-center p-6 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">
+                    {profile.total_hires}
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">
+                    {t("Profile.totalHires")}
+                  </div>
                 </div>
               </div>
-              <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <div className="text-4xl font-bold text-green-600 dark:text-green-400">
-                  {profile.total_hires}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  {t("Profile.totalHires")}
-                </div>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Save Button */}
           {isEditMode && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <button
-                type="submit"
-                disabled={saving}
-                className="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-              >
-                {saving ? t("Profile.saving") : t("Profile.save")}
-              </button>
-            </div>
+            <Card className="shadow-airbnb">
+              <CardContent className="pt-6">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full h-12 gap-2"
+                  size="lg"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      {t("Profile.saving")}
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5" />
+                      {t("Profile.save")}
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
           )}
         </form>
       </div>
     </div>
   );
 }
-
