@@ -36,48 +36,48 @@ export default function AdminSidebar() {
   const menuItems: MenuItem[] = [
     {
       key: "dashboard",
-      icon: <LayoutDashboard className="w-5 h-5" />,
+      icon: <LayoutDashboard className="w-5 h-5 shrink-0" />,
       href: `/${locale}/admin`,
     },
     {
       key: "settings",
-      icon: <Settings className="w-5 h-5" />,
+      icon: <Settings className="w-5 h-5 shrink-0" />,
       children: [
         {
           key: "seo",
-          icon: <Settings className="w-4 h-4" />,
+          icon: <Settings className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/seo`,
         },
         {
           key: "branding",
-          icon: <Image className="w-4 h-4" />,
+          icon: <Image className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/branding`,
         },
         {
           key: "header",
-          icon: <Settings className="w-4 h-4" />,
+          icon: <Settings className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/header`,
         },
         {
           key: "footer",
-          icon: <Settings className="w-4 h-4" />,
+          icon: <Settings className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/footer`,
         },
         {
           key: "contact",
-          icon: <Mail className="w-4 h-4" />,
+          icon: <Mail className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/contact`,
         },
         {
           key: "social",
-          icon: <Share2 className="w-4 h-4" />,
+          icon: <Share2 className="w-4 h-4 shrink-0" />,
           href: `/${locale}/admin/social`,
         },
       ],
     },
     {
       key: "users",
-      icon: <Users className="w-5 h-5" />,
+      icon: <Users className="w-5 h-5 shrink-0" />,
       href: `/${locale}/admin/users`,
     },
   ];
@@ -132,9 +132,9 @@ export default function AdminSidebar() {
             </div>
             {!isCollapsed &&
               (isExpanded ? (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 shrink-0" />
               ) : (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 shrink-0" />
               ))}
           </button>
 

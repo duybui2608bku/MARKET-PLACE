@@ -55,9 +55,75 @@
     "contactSupport": "联系客服"
   },
   "Home": {
-    "register": "注册",
-    "documentation": "文档",
-    "deployNow": "立即部署"
+    "badge": "越南第一服务平台",
+    "heroTitle1": "寻找专业",
+    "heroTitle2": "工作者",
+    "heroTitle3": "在您附近",
+    "heroDescription": "快速连接数千名技能精湛的工作者。从园艺、维修到护理 - 您需要的所有服务。",
+    "getStarted": "立即开始",
+    "searchWorkers": "搜索工作者",
+    "stats": {
+      "workers": "工作者",
+      "jobs": "工作",
+      "rating": "评分"
+    },
+    "categories": {
+      "title": "服务类别",
+      "subtitle": "探索数百名工作者提供的热门服务",
+      "gardening": "园艺",
+      "repair": "维修",
+      "care": "护理",
+      "cleaning": "清洁",
+      "construction": "建筑",
+      "transport": "运输",
+      "workersCount": "工作者"
+    },
+    "features": {
+      "title": "为什么选择我们？",
+      "subtitle": "平台旨在为工作者和雇主提供最佳体验",
+      "quickConnect": {
+        "title": "快速连接",
+        "description": "搜索并连接您所在地区的数千名专业工作者"
+      },
+      "security": {
+        "title": "安全可靠",
+        "description": "身份验证系统和透明评价让您放心"
+      },
+      "quality": {
+        "title": "质量评级",
+        "description": "社区评价和评分系统帮助您选择最好的"
+      },
+      "diverse": {
+        "title": "多样化服务",
+        "description": "从园艺、维修到护理，您需要的所有服务都有"
+      }
+    },
+    "howItWorks": {
+      "title": "如何运作",
+      "subtitle": "只需4个简单步骤，您就可以连接到合适的工作者",
+      "step1": {
+        "title": "创建账户",
+        "description": "免费注册并创建您的个人资料"
+      },
+      "step2": {
+        "title": "搜索",
+        "description": "浏览工作者列表或发布工作"
+      },
+      "step3": {
+        "title": "连接",
+        "description": "联系并商定工作条件"
+      },
+      "step4": {
+        "title": "完成",
+        "description": "工作完成，评价和付款"
+      }
+    },
+    "cta": {
+      "title": "准备好开始了吗？",
+      "subtitle": "加入数千名使用我们平台的用户",
+      "registerWorker": "注册成为工作者",
+      "findWorkers": "查找工作者"
+    }
   },
   "Profile": {
     "title": "我的个人资料",

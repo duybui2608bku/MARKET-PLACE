@@ -55,9 +55,75 @@
     "contactSupport": "고객 지원"
   },
   "Home": {
-    "register": "가입",
-    "documentation": "문서",
-    "deployNow": "지금 배포"
+    "badge": "베트남 1위 연결 플랫폼",
+    "heroTitle1": "전문",
+    "heroTitle2": "작업자를",
+    "heroTitle3": "찾으세요",
+    "heroDescription": "수천 명의 숙련된 작업자와 빠르게 연결하세요. 정원 가꾸기, 수리부터 케어까지 - 필요한 모든 서비스.",
+    "getStarted": "시작하기",
+    "searchWorkers": "작업자 검색",
+    "stats": {
+      "workers": "작업자",
+      "jobs": "작업",
+      "rating": "평점"
+    },
+    "categories": {
+      "title": "서비스 카테고리",
+      "subtitle": "수백 명의 작업자가 제공하는 인기 서비스를 탐색하세요",
+      "gardening": "정원 가꾸기",
+      "repair": "수리",
+      "care": "케어",
+      "cleaning": "청소",
+      "construction": "건설",
+      "transport": "운송",
+      "workersCount": "작업자"
+    },
+    "features": {
+      "title": "왜 우리를 선택해야 할까요?",
+      "subtitle": "작업자와 고용주 모두에게 최고의 경험을 제공하도록 설계된 플랫폼",
+      "quickConnect": {
+        "title": "빠른 연결",
+        "description": "귀하의 지역에서 수천 명의 전문 작업자를 검색하고 연결하세요"
+      },
+      "security": {
+        "title": "안전하고 보안",
+        "description": "신원 확인 시스템과 투명한 리뷰로 안심할 수 있습니다"
+      },
+      "quality": {
+        "title": "품질 평가",
+        "description": "커뮤니티 리뷰 및 평점 시스템이 최고를 선택하는 데 도움을 줍니다"
+      },
+      "diverse": {
+        "title": "다양한 서비스",
+        "description": "정원 가꾸기, 수리부터 케어까지, 필요한 모든 서비스를 이용할 수 있습니다"
+      }
+    },
+    "howItWorks": {
+      "title": "작동 방식",
+      "subtitle": "단 4단계로 적합한 작업자와 연결할 수 있습니다",
+      "step1": {
+        "title": "계정 만들기",
+        "description": "무료로 가입하고 프로필을 만드세요"
+      },
+      "step2": {
+        "title": "검색",
+        "description": "작업자 목록을 탐색하거나 작업을 게시하세요"
+      },
+      "step3": {
+        "title": "연결",
+        "description": "연락하고 작업 조건에 동의하세요"
+      },
+      "step4": {
+        "title": "완료",
+        "description": "작업 완료, 리뷰 및 결제"
+      }
+    },
+    "cta": {
+      "title": "시작할 준비가 되셨나요?",
+      "subtitle": "우리 플랫폼을 사용하는 수천 명의 사용자와 함께하세요",
+      "registerWorker": "작업자로 등록",
+      "findWorkers": "작업자 찾기"
+    }
   },
   "Profile": {
     "title": "내 프로필",

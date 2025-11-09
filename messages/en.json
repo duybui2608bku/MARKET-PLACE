@@ -55,9 +55,75 @@
     "contactSupport": "Contact support"
   },
   "Home": {
-    "register": "Register",
-    "documentation": "Documentation",
-    "deployNow": "Deploy Now"
+    "badge": "#1 Connection Platform in Vietnam",
+    "heroTitle1": "Find professional",
+    "heroTitle2": "workers",
+    "heroTitle3": "near you",
+    "heroDescription": "Quickly connect with thousands of highly skilled workers. From gardening, repairs to care - all services you need.",
+    "getStarted": "Get Started",
+    "searchWorkers": "Search Workers",
+    "stats": {
+      "workers": "Workers",
+      "jobs": "Jobs",
+      "rating": "Rating"
+    },
+    "categories": {
+      "title": "Service Categories",
+      "subtitle": "Explore popular services with hundreds of workers ready to serve",
+      "gardening": "Gardening",
+      "repair": "Repair",
+      "care": "Care",
+      "cleaning": "Cleaning",
+      "construction": "Construction",
+      "transport": "Transport",
+      "workersCount": "workers"
+    },
+    "features": {
+      "title": "Why choose us?",
+      "subtitle": "Platform designed to deliver the best experience for both workers and employers",
+      "quickConnect": {
+        "title": "Quick Connection",
+        "description": "Search and connect with thousands of professional workers in your area"
+      },
+      "security": {
+        "title": "Safe & Secure",
+        "description": "Identity verification system and transparent reviews give you peace of mind"
+      },
+      "quality": {
+        "title": "Quality Rating",
+        "description": "Community review and rating system helps you choose the best"
+      },
+      "diverse": {
+        "title": "Diverse Services",
+        "description": "From gardening, repairs to care, all services you need are available"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "In just 4 simple steps, you can connect with suitable workers",
+      "step1": {
+        "title": "Create Account",
+        "description": "Sign up for free and create your profile"
+      },
+      "step2": {
+        "title": "Search",
+        "description": "Browse through workers list or post a job"
+      },
+      "step3": {
+        "title": "Connect",
+        "description": "Contact and agree on working conditions"
+      },
+      "step4": {
+        "title": "Complete",
+        "description": "Work completed, review and payment"
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Join thousands of users using our platform",
+      "registerWorker": "Register as Worker",
+      "findWorkers": "Find Workers"
+    }
   },
   "Profile": {
     "title": "My Profile",

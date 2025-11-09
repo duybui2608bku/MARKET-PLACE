@@ -248,30 +248,30 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link
                       href={`/${locale || "vi"}/profile/${user.role}`}
-                      className="cursor-pointer"
+                      className="cursor-pointer flex items-center"
                     >
-                      <UserIcon className="mr-2 h-4 w-4" />
-                      {t("Header.myProfile", "My Profile")}
+                      <UserIcon className="mr-2 h-4 w-4 shrink-0" />
+                      <span>{t("Header.myProfile", "My Profile")}</span>
                     </Link>
                   </DropdownMenuItem>
                   {user.role === "admin" && (
                     <DropdownMenuItem asChild>
                       <Link
                         href={`/${locale || "vi"}/admin`}
-                        className="cursor-pointer text-primary"
+                        className="cursor-pointer text-primary flex items-center"
                       >
-                        <Settings className="mr-2 h-4 w-4" />
-                        {t("Header.adminPanel", "Admin Panel")}
+                        <Settings className="mr-2 h-4 w-4 shrink-0" />
+                        <span>{t("Header.adminPanel", "Admin Panel")}</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="cursor-pointer text-destructive focus:text-destructive"
+                    className="cursor-pointer text-destructive focus:text-destructive flex items-center"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    {t("Header.logout", "Logout")}
+                    <LogOut className="mr-2 h-4 w-4 shrink-0" />
+                    <span>{t("Header.logout", "Logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -370,9 +370,9 @@ export default function Header() {
                         className="w-full justify-start"
                         asChild
                       >
-                        <Link href={`/${locale || "vi"}/profile/${user.role}`}>
-                          <UserIcon className="mr-2 h-4 w-4" />
-                          {t("Header.myProfile", "My Profile")}
+                        <Link href={`/${locale || "vi"}/profile/${user.role}`} className="flex items-center">
+                          <UserIcon className="mr-2 h-4 w-4 shrink-0" />
+                          <span>{t("Header.myProfile", "My Profile")}</span>
                         </Link>
                       </Button>
                       {user.role === "admin" && (
@@ -381,9 +381,9 @@ export default function Header() {
                           className="w-full justify-start text-primary"
                           asChild
                         >
-                          <Link href={`/${locale || "vi"}/admin`}>
-                            <Settings className="mr-2 h-4 w-4" />
-                            {t("Header.adminPanel", "Admin Panel")}
+                          <Link href={`/${locale || "vi"}/admin`} className="flex items-center">
+                            <Settings className="mr-2 h-4 w-4 shrink-0" />
+                            <span>{t("Header.adminPanel", "Admin Panel")}</span>
                           </Link>
                         </Button>
                       )}
@@ -392,8 +392,8 @@ export default function Header() {
                         className="w-full justify-start text-destructive"
                         onClick={handleLogout}
                       >
-                        <LogOut className="mr-2 h-4 w-4" />
-                        {t("Header.logout", "Logout")}
+                        <LogOut className="mr-2 h-4 w-4 shrink-0" />
+                        <span>{t("Header.logout", "Logout")}</span>
                       </Button>
                     </div>
                   ) : (

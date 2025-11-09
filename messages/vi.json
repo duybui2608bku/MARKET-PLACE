@@ -55,9 +55,75 @@
     "contactSupport": "Liên hệ hỗ trợ"
   },
   "Home": {
-    "register": "Đăng ký",
-    "documentation": "Tài liệu",
-    "deployNow": "Deploy Now"
+    "badge": "Nền tảng kết nối #1 tại Việt Nam",
+    "heroTitle1": "Tìm kiếm người làm việc",
+    "heroTitle2": "chuyên nghiệp",
+    "heroTitle3": "gần bạn",
+    "heroDescription": "Kết nối nhanh chóng với hàng nghìn workers có kỹ năng chuyên môn cao. Từ làm vườn, sửa chữa đến chăm sóc - mọi dịch vụ bạn cần.",
+    "getStarted": "Bắt đầu ngay",
+    "searchWorkers": "Tìm kiếm workers",
+    "stats": {
+      "workers": "Workers",
+      "jobs": "Công việc",
+      "rating": "Đánh giá"
+    },
+    "categories": {
+      "title": "Danh mục dịch vụ",
+      "subtitle": "Khám phá các dịch vụ phổ biến với hàng trăm workers sẵn sàng phục vụ",
+      "gardening": "Làm vườn",
+      "repair": "Sửa chữa",
+      "care": "Chăm sóc",
+      "cleaning": "Vệ sinh",
+      "construction": "Xây dựng",
+      "transport": "Vận chuyển",
+      "workersCount": "workers"
+    },
+    "features": {
+      "title": "Tại sao chọn chúng tôi?",
+      "subtitle": "Nền tảng được thiết kế để mang lại trải nghiệm tốt nhất cho cả workers và employers",
+      "quickConnect": {
+        "title": "Kết nối nhanh chóng",
+        "description": "Tìm kiếm và kết nối với hàng nghìn người làm việc chuyên nghiệp trong khu vực của bạn"
+      },
+      "security": {
+        "title": "An toàn & Bảo mật",
+        "description": "Hệ thống xác minh danh tính và đánh giá minh bạch giúp bạn an tâm"
+      },
+      "quality": {
+        "title": "Đánh giá chất lượng",
+        "description": "Hệ thống review và rating từ cộng đồng giúp bạn chọn lựa tốt nhất"
+      },
+      "diverse": {
+        "title": "Đa dạng dịch vụ",
+        "description": "Từ làm vườn, sửa chữa đến chăm sóc, mọi dịch vụ bạn cần đều có"
+      }
+    },
+    "howItWorks": {
+      "title": "Cách thức hoạt động",
+      "subtitle": "Chỉ với 4 bước đơn giản, bạn có thể kết nối với workers phù hợp",
+      "step1": {
+        "title": "Tạo tài khoản",
+        "description": "Đăng ký miễn phí và tạo hồ sơ của bạn"
+      },
+      "step2": {
+        "title": "Tìm kiếm",
+        "description": "Duyệt qua danh sách workers hoặc đăng công việc"
+      },
+      "step3": {
+        "title": "Kết nối",
+        "description": "Liên hệ và thỏa thuận điều kiện làm việc"
+      },
+      "step4": {
+        "title": "Hoàn thành",
+        "description": "Công việc được hoàn tất, đánh giá và thanh toán"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng bắt đầu?",
+      "subtitle": "Tham gia cùng hàng nghìn người dùng đang sử dụng nền tảng của chúng tôi",
+      "registerWorker": "Đăng ký làm Worker",
+      "findWorkers": "Tìm kiếm Workers"
+    }
   },
   "Profile": {
     "title": "Hồ Sơ Của Tôi",
