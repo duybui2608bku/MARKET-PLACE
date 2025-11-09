@@ -67,9 +67,9 @@ export default function RegisterPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild className="w-full" size="lg">
-              <Link href={`/${locale}`}>
-                <Home className="mr-2 h-4 w-4" />
-                Về trang chủ
+              <Link href={`/${locale}`} className="flex items-center justify-center">
+                <Home className="mr-2 h-4 w-4 shrink-0" />
+                <span>Về trang chủ</span>
               </Link>
             </Button>
           </CardFooter>
@@ -269,7 +269,7 @@ export default function RegisterPage() {
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -285,7 +285,7 @@ export default function RegisterPage() {
                   </li>
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -301,7 +301,7 @@ export default function RegisterPage() {
                   </li>
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -371,7 +371,7 @@ export default function RegisterPage() {
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -387,7 +387,7 @@ export default function RegisterPage() {
                   </li>
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -403,7 +403,7 @@ export default function RegisterPage() {
                   </li>
                   <li className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                     <svg
-                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

@@ -52,8 +52,6 @@ export default function WorkerProfileDetailPage() {
         .eq("id", workerId)
         .single();
 
-      console.log("👤 Profile Data:", profileData);
-
       if (profileError || !profileData) {
         console.error("Error loading profile:", profileError);
         router.push(`/${locale}`);
@@ -106,7 +104,9 @@ export default function WorkerProfileDetailPage() {
   if (!profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
-        <p className="text-zinc-600 dark:text-zinc-400">{t("PublicProfile.profileNotFound")}</p>
+        <p className="text-zinc-600 dark:text-zinc-400">
+          {t("PublicProfile.profileNotFound")}
+        </p>
       </div>
     );
   }
@@ -242,7 +242,8 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                       {profile.city && profile.district
                         ? `${profile.district}, ${profile.city}`
-                        : profile.city || t("PublicProfile.locationNotSpecified")}
+                        : profile.city ||
+                          t("PublicProfile.locationNotSpecified")}
                       {profile.is_verified && (
                         <>
                           <span>•</span>
@@ -508,8 +509,11 @@ export default function WorkerProfileDetailPage() {
                       ? t("PublicProfile.assistance")
                       : t("PublicProfile.companionship")}{" "}
                     •{" "}
-                    {(profile.service_categories && profile.service_categories.length > 0)
-                      ? profile.service_categories.map(cat => cat.replace(/_/g, " ")).join(", ")
+                    {profile.service_categories &&
+                    profile.service_categories.length > 0
+                      ? profile.service_categories
+                          .map((cat) => cat.replace(/_/g, " "))
+                          .join(", ")
                       : profile.service_category
                       ? profile.service_category.replace(/_/g, " ")
                       : `Level ${profile.service_level}`}
@@ -520,11 +524,13 @@ export default function WorkerProfileDetailPage() {
               {/* Service Cards with Pricing - Slider if multiple services */}
               {(() => {
                 // Get services with pricing
-                const services = profile.service_categories && profile.service_categories.length > 0
-                  ? profile.service_categories
-                  : profile.service_category
-                  ? [profile.service_category]
-                  : [];
+                const services =
+                  profile.service_categories &&
+                  profile.service_categories.length > 0
+                    ? profile.service_categories
+                    : profile.service_category
+                    ? [profile.service_category]
+                    : [];
 
                 const servicePricing = profile.service_pricing || {};
                 const hasMultipleServices = services.length > 1;
@@ -548,24 +554,54 @@ export default function WorkerProfileDetailPage() {
                       {hasMultipleServices && (
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => setCurrentServiceIndex((prev) => Math.max(0, prev - 1))}
+                            onClick={() =>
+                              setCurrentServiceIndex((prev) =>
+                                Math.max(0, prev - 1)
+                              )
+                            }
                             disabled={currentServiceIndex === 0}
                             className="rounded-lg p-1.5 text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed dark:text-zinc-400 dark:hover:bg-zinc-800"
                           >
-                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 19l-7-7 7-7"
+                              />
                             </svg>
                           </button>
                           <span className="text-xs text-zinc-500 dark:text-zinc-400">
                             {currentServiceIndex + 1} / {services.length}
                           </span>
                           <button
-                            onClick={() => setCurrentServiceIndex((prev) => Math.min(services.length - 1, prev + 1))}
-                            disabled={currentServiceIndex === services.length - 1}
+                            onClick={() =>
+                              setCurrentServiceIndex((prev) =>
+                                Math.min(services.length - 1, prev + 1)
+                              )
+                            }
+                            disabled={
+                              currentServiceIndex === services.length - 1
+                            }
                             className="rounded-lg p-1.5 text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed dark:text-zinc-400 dark:hover:bg-zinc-800"
                           >
-                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
                             </svg>
                           </button>
                         </div>
@@ -601,7 +637,8 @@ export default function WorkerProfileDetailPage() {
                             >
                               {hasMultipleServices && (
                                 <p className="mb-2 text-sm font-medium text-black dark:text-white">
-                                  {categoryNames[serviceCategory] || serviceCategory.replace(/_/g, " ")}
+                                  {categoryNames[serviceCategory] ||
+                                    serviceCategory.replace(/_/g, " ")}
                                 </p>
                               )}
                               <div className="space-y-2">
@@ -620,10 +657,15 @@ export default function WorkerProfileDetailPage() {
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                       />
                                     </svg>
-                                    <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
+                                    <span className="text-sm">
+                                      {t("PublicProfile.hourlyRate")}
+                                    </span>
                                   </div>
                                   <p className="text-xl font-bold text-black dark:text-white">
-                                    {formatCurrency(pricing.hourly_rate, profile.currency)}
+                                    {formatCurrency(
+                                      pricing.hourly_rate,
+                                      profile.currency
+                                    )}
                                   </p>
                                 </div>
                                 {pricing.daily_rate > 0 && (
@@ -642,10 +684,15 @@ export default function WorkerProfileDetailPage() {
                                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                         />
                                       </svg>
-                                      <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
+                                      <span className="text-sm">
+                                        {t("PublicProfile.dailyRate")}
+                                      </span>
                                     </div>
                                     <p className="text-xl font-bold text-black dark:text-white">
-                                      {formatCurrency(pricing.daily_rate, profile.currency)}
+                                      {formatCurrency(
+                                        pricing.daily_rate,
+                                        profile.currency
+                                      )}
                                     </p>
                                   </div>
                                 )}
@@ -665,16 +712,26 @@ export default function WorkerProfileDetailPage() {
                                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                         />
                                       </svg>
-                                      <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
+                                      <span className="text-sm">
+                                        {t("PublicProfile.monthlyRate")}
+                                      </span>
                                     </div>
                                     <p className="text-xl font-bold text-black dark:text-white">
-                                      {formatCurrency(pricing.monthly_rate, profile.currency)}
+                                      {formatCurrency(
+                                        pricing.monthly_rate,
+                                        profile.currency
+                                      )}
                                     </p>
                                   </div>
                                 )}
                                 {pricing.min_booking_hours > 0 && (
                                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                    {t("PublicProfile.minimumBookingHours").replace("{hours}", pricing.min_booking_hours.toString())}
+                                    {t(
+                                      "PublicProfile.minimumBookingHours"
+                                    ).replace(
+                                      "{hours}",
+                                      pricing.min_booking_hours.toString()
+                                    )}
                                   </p>
                                 )}
                               </div>
@@ -702,10 +759,15 @@ export default function WorkerProfileDetailPage() {
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                               />
                             </svg>
-                            <span className="text-sm">{t("PublicProfile.hourlyRate")}</span>
+                            <span className="text-sm">
+                              {t("PublicProfile.hourlyRate")}
+                            </span>
                           </div>
                           <p className="text-xl font-bold text-black dark:text-white">
-                            {formatCurrency(profile.hourly_rate, profile.currency)}
+                            {formatCurrency(
+                              profile.hourly_rate,
+                              profile.currency
+                            )}
                           </p>
                         </div>
                         {profile.daily_rate && (
@@ -724,10 +786,15 @@ export default function WorkerProfileDetailPage() {
                                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                 />
                               </svg>
-                              <span className="text-sm">{t("PublicProfile.dailyRate")}</span>
+                              <span className="text-sm">
+                                {t("PublicProfile.dailyRate")}
+                              </span>
                             </div>
                             <p className="text-xl font-bold text-black dark:text-white">
-                              {formatCurrency(profile.daily_rate, profile.currency)}
+                              {formatCurrency(
+                                profile.daily_rate,
+                                profile.currency
+                              )}
                             </p>
                           </div>
                         )}
@@ -747,10 +814,15 @@ export default function WorkerProfileDetailPage() {
                                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                 />
                               </svg>
-                              <span className="text-sm">{t("PublicProfile.monthlyRate")}</span>
+                              <span className="text-sm">
+                                {t("PublicProfile.monthlyRate")}
+                              </span>
                             </div>
                             <p className="text-xl font-bold text-black dark:text-white">
-                              {formatCurrency(profile.monthly_rate, profile.currency)}
+                              {formatCurrency(
+                                profile.monthly_rate,
+                                profile.currency
+                              )}
                             </p>
                           </div>
                         )}
@@ -780,7 +852,9 @@ export default function WorkerProfileDetailPage() {
                       </svg>
                       <span className="text-zinc-700 dark:text-zinc-300">
                         {t("PublicProfile.experience")}:{" "}
-                        <strong>{profile.experience_years}+ {t("PublicProfile.years")}</strong>
+                        <strong>
+                          {profile.experience_years}+ {t("PublicProfile.years")}
+                        </strong>
                       </span>
                     </div>
                   )}
@@ -801,7 +875,12 @@ export default function WorkerProfileDetailPage() {
                     </svg>
                     <span className="text-zinc-700 dark:text-zinc-300">
                       {t("PublicProfile.responseTime")}:{" "}
-                      <strong>{t("PublicProfile.withinHours").replace("{hours}", profile.min_booking_hours.toString())}</strong>
+                      <strong>
+                        {t("PublicProfile.withinHours").replace(
+                          "{hours}",
+                          profile.min_booking_hours.toString()
+                        )}
+                      </strong>
                     </span>
                   </div>
                 )}

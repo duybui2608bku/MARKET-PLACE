@@ -137,15 +137,15 @@ export default function WorkerProfilePage() {
           </div>
           <div className="flex gap-3">
             <Button variant="outline" asChild>
-              <Link href={`/${locale}/worker/${user.id}`}>
-                <Eye className="mr-2 h-4 w-4" />
-                {t("WorkerProfile.viewPublicProfile")}
+              <Link href={`/${locale}/worker/${user.id}`} className="flex items-center">
+                <Eye className="mr-2 h-4 w-4 shrink-0" />
+                <span>{t("WorkerProfile.viewPublicProfile")}</span>
               </Link>
             </Button>
             <Button asChild>
-              <Link href={`/${locale}/worker-onboarding`}>
-                <Edit className="mr-2 h-4 w-4" />
-                {t("WorkerProfile.editFullProfile")}
+              <Link href={`/${locale}/worker-onboarding`} className="flex items-center">
+                <Edit className="mr-2 h-4 w-4 shrink-0" />
+                <span>{t("WorkerProfile.editFullProfile")}</span>
               </Link>
             </Button>
           </div>
@@ -625,15 +625,15 @@ export default function WorkerProfilePage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <Button variant="outline" asChild className="w-full justify-start">
-                  <Link href={`/${locale}/worker-onboarding`}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    {t("WorkerProfile.editProfile")}
+                  <Link href={`/${locale}/worker-onboarding`} className="flex items-center">
+                    <Edit className="mr-2 h-4 w-4 shrink-0" />
+                    <span>{t("WorkerProfile.editProfile")}</span>
                   </Link>
                 </Button>
                 <Button variant="outline" asChild className="w-full justify-start">
-                  <Link href={`/${locale}/worker/${user.id}`}>
-                    <Eye className="mr-2 h-4 w-4" />
-                    {t("WorkerProfile.viewPublicProfile")}
+                  <Link href={`/${locale}/worker/${user.id}`} className="flex items-center">
+                    <Eye className="mr-2 h-4 w-4 shrink-0" />
+                    <span>{t("WorkerProfile.viewPublicProfile")}</span>
                   </Link>
                 </Button>
               </CardContent>

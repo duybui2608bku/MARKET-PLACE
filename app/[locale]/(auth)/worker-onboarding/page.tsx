@@ -10,12 +10,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertCircle,
@@ -217,15 +230,24 @@ export default function WorkerOnboardingPage() {
         setStep2Data({
           gallery_images: profileData.gallery_images || [],
           service_type: profileData.service_type || "",
-          service_categories: profileData.service_categories ||
-            (profileData.service_category ? [profileData.service_category] : []),
+          service_categories:
+            profileData.service_categories ||
+            (profileData.service_category
+              ? [profileData.service_category]
+              : []),
           service_level: profileData.service_level || "",
           service_languages: profileData.service_languages || [],
         });
 
         let servicePricing: Record<string, ServicePricing> = {};
-        if (profileData.service_pricing && typeof profileData.service_pricing === 'object') {
-          servicePricing = profileData.service_pricing as Record<string, ServicePricing>;
+        if (
+          profileData.service_pricing &&
+          typeof profileData.service_pricing === "object"
+        ) {
+          servicePricing = profileData.service_pricing as Record<
+            string,
+            ServicePricing
+          >;
         } else if (profileData.service_category && profileData.hourly_rate) {
           const hourly = profileData.hourly_rate;
           servicePricing[profileData.service_category] = {
@@ -404,10 +426,9 @@ export default function WorkerOnboardingPage() {
             step2Data.service_type === "companionship"
               ? step2Data.service_level
               : null,
-          service_languages:
-            step2Data.service_categories.includes("translator")
-              ? step2Data.service_languages
-              : [],
+          service_languages: step2Data.service_categories.includes("translator")
+            ? step2Data.service_languages
+            : [],
           setup_step: 3,
         })
         .eq("id", userId);
@@ -467,10 +488,17 @@ export default function WorkerOnboardingPage() {
     e.preventDefault();
     setError(null);
 
-    if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+    if (
+      step2Data.service_type === "assistance" &&
+      step2Data.service_categories.length > 0
+    ) {
       for (const category of step2Data.service_categories) {
         const pricing = step3Data.service_pricing[category];
-        if (!pricing || !pricing.hourly_rate || parseFloat(pricing.hourly_rate) <= 0) {
+        if (
+          !pricing ||
+          !pricing.hourly_rate ||
+          parseFloat(pricing.hourly_rate) <= 0
+        ) {
           setError(`Please enter pricing for ${category.replace(/_/g, " ")}`);
           return;
         }
@@ -488,7 +516,10 @@ export default function WorkerOnboardingPage() {
       if (!userId) return;
 
       const servicePricingJson: Record<string, any> = {};
-      if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+      if (
+        step2Data.service_type === "assistance" &&
+        step2Data.service_categories.length > 0
+      ) {
         for (const category of step2Data.service_categories) {
           const pricing = step3Data.service_pricing[category];
           if (pricing) {
@@ -503,7 +534,10 @@ export default function WorkerOnboardingPage() {
       }
 
       let legacyHourlyRate = null;
-      if (step2Data.service_type === "assistance" && step2Data.service_categories.length > 0) {
+      if (
+        step2Data.service_type === "assistance" &&
+        step2Data.service_categories.length > 0
+      ) {
         const firstCategory = step2Data.service_categories[0];
         const firstPricing = step3Data.service_pricing[firstCategory];
         if (firstPricing) {
@@ -519,9 +553,12 @@ export default function WorkerOnboardingPage() {
           currency: step3Data.currency,
           service_pricing: servicePricingJson,
           hourly_rate: legacyHourlyRate,
-          min_booking_hours: step2Data.service_type === "assistance" && step2Data.service_categories.length > 0
-            ? step3Data.service_pricing[step2Data.service_categories[0]]?.min_booking_hours || 2
-            : step3Data.min_booking_hours,
+          min_booking_hours:
+            step2Data.service_type === "assistance" &&
+            step2Data.service_categories.length > 0
+              ? step3Data.service_pricing[step2Data.service_categories[0]]
+                  ?.min_booking_hours || 2
+              : step3Data.min_booking_hours,
           service_images: step3Data.service_images,
           setup_step: 4,
           setup_completed: true,
@@ -581,9 +618,7 @@ export default function WorkerOnboardingPage() {
                 {index < steps.length - 1 && (
                   <Separator
                     className={`flex-1 mx-4 ${
-                      currentStep > step.number
-                        ? "bg-primary"
-                        : "bg-muted"
+                      currentStep > step.number ? "bg-primary" : "bg-muted"
                     }`}
                   />
                 )}
@@ -608,9 +643,7 @@ export default function WorkerOnboardingPage() {
           <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl">Chi Tiết Cá Nhân</CardTitle>
-              <CardDescription>
-                Hãy cho chúng tôi biết về bạn
-              </CardDescription>
+              <CardDescription>Hãy cho chúng tôi biết về bạn</CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -632,7 +665,10 @@ export default function WorkerOnboardingPage() {
                       required
                       value={step1Data.full_name}
                       onChange={(e) =>
-                        setStep1Data({ ...step1Data, full_name: e.target.value })
+                        setStep1Data({
+                          ...step1Data,
+                          full_name: e.target.value,
+                        })
                       }
                       placeholder="Nhập họ và tên của bạn"
                     />
@@ -673,7 +709,9 @@ export default function WorkerOnboardingPage() {
                       onChange={(e) =>
                         setStep1Data({
                           ...step1Data,
-                          height: e.target.value ? parseInt(e.target.value) : "",
+                          height: e.target.value
+                            ? parseInt(e.target.value)
+                            : "",
                         })
                       }
                       placeholder="Nhập chiều cao của bạn"
@@ -750,7 +788,11 @@ export default function WorkerOnboardingPage() {
                   {step1Data.hobbies.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {step1Data.hobbies.map((hobby) => (
-                        <Badge key={hobby} variant="secondary" className="gap-1">
+                        <Badge
+                          key={hobby}
+                          variant="secondary"
+                          className="gap-1"
+                        >
                           {hobby}
                           <X
                             className="h-3 w-3 cursor-pointer"
@@ -800,7 +842,10 @@ export default function WorkerOnboardingPage() {
                     rows={4}
                     value={step1Data.introduction}
                     onChange={(e) =>
-                      setStep1Data({ ...step1Data, introduction: e.target.value })
+                      setStep1Data({
+                        ...step1Data,
+                        introduction: e.target.value,
+                      })
                     }
                     placeholder="Giới thiệu bản thân bạn..."
                   />
@@ -874,16 +919,21 @@ export default function WorkerOnboardingPage() {
                   />
                 </div>
 
-                <Button type="submit" disabled={saving} className="w-full" size="lg">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full"
+                  size="lg"
+                >
                   {saving ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Đang lưu...
+                      <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin" />
+                      <span>Đang lưu...</span>
                     </>
                   ) : (
                     <>
-                      Tiếp theo
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <span>Tiếp theo</span>
+                      <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
                     </>
                   )}
                 </Button>
@@ -937,7 +987,9 @@ export default function WorkerOnboardingPage() {
                       <SelectValue placeholder="Chọn loại dịch vụ" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="assistance">Hỗ trợ (Assistance)</SelectItem>
+                      <SelectItem value="assistance">
+                        Hỗ trợ (Assistance)
+                      </SelectItem>
                       <SelectItem value="companionship">
                         Đồng hành (Companionship)
                       </SelectItem>
@@ -960,7 +1012,8 @@ export default function WorkerOnboardingPage() {
                           description: "Hỗ trợ hành chính và dịch thuật",
                         },
                         {
-                          value: "professional_onsite_assist" as AssistanceCategory,
+                          value:
+                            "professional_onsite_assist" as AssistanceCategory,
                           title: "Hỗ Trợ Chuyên Nghiệp",
                           description: "Hỗ trợ chuyên nghiệp tại chỗ",
                         },
@@ -980,9 +1033,8 @@ export default function WorkerOnboardingPage() {
                           description: "Dịch thuật và phiên dịch",
                         },
                       ].map((category) => {
-                        const isSelected = step2Data.service_categories.includes(
-                          category.value
-                        );
+                        const isSelected =
+                          step2Data.service_categories.includes(category.value);
                         return (
                           <Card
                             key={category.value}
@@ -1061,7 +1113,11 @@ export default function WorkerOnboardingPage() {
                     {step2Data.service_languages.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {step2Data.service_languages.map((lang) => (
-                          <Badge key={lang} variant="secondary" className="gap-1">
+                          <Badge
+                            key={lang}
+                            variant="secondary"
+                            className="gap-1"
+                          >
                             {lang}
                             <X
                               className="h-3 w-3 cursor-pointer"
@@ -1078,7 +1134,8 @@ export default function WorkerOnboardingPage() {
                 {step2Data.service_type === "companionship" && (
                   <div className="space-y-3">
                     <Label>
-                      Cấp Độ Đồng Hành <span className="text-destructive">*</span>
+                      Cấp Độ Đồng Hành{" "}
+                      <span className="text-destructive">*</span>
                     </Label>
                     <RadioGroup
                       value={step2Data.service_level.toString()}
@@ -1090,40 +1147,61 @@ export default function WorkerOnboardingPage() {
                       }
                     >
                       <div className="flex items-start space-x-3 rounded-lg border p-4">
-                        <RadioGroupItem value="1" id="level1" className="mt-1" />
+                        <RadioGroupItem
+                          value="1"
+                          id="level1"
+                          className="mt-1"
+                        />
                         <div className="flex-1">
-                          <Label htmlFor="level1" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="level1"
+                            className="font-medium cursor-pointer"
+                          >
                             Cấp độ 1
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Không tiếp xúc cơ thể, không yêu cầu trò chuyện trí tuệ,
-                            trang phục thường ngày
+                            Không tiếp xúc cơ thể, không yêu cầu trò chuyện trí
+                            tuệ, trang phục thường ngày
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-start space-x-3 rounded-lg border p-4">
-                        <RadioGroupItem value="2" id="level2" className="mt-1" />
+                        <RadioGroupItem
+                          value="2"
+                          id="level2"
+                          className="mt-1"
+                        />
                         <div className="flex-1">
-                          <Label htmlFor="level2" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="level2"
+                            className="font-medium cursor-pointer"
+                          >
                             Cấp độ 2
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Không tiếp xúc cơ thể, có trò chuyện trí tuệ, trang phục
-                            bán trang trọng
+                            Không tiếp xúc cơ thể, có trò chuyện trí tuệ, trang
+                            phục bán trang trọng
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-start space-x-3 rounded-lg border p-4">
-                        <RadioGroupItem value="3" id="level3" className="mt-1" />
+                        <RadioGroupItem
+                          value="3"
+                          id="level3"
+                          className="mt-1"
+                        />
                         <div className="flex-1">
-                          <Label htmlFor="level3" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="level3"
+                            className="font-medium cursor-pointer"
+                          >
                             Cấp độ 3
                           </Label>
                           <p className="text-sm text-muted-foreground">
-                            Có tiếp xúc cơ thể (không thân mật), có trò chuyện trí tuệ,
-                            trang phục trang trọng
+                            Có tiếp xúc cơ thể (không thân mật), có trò chuyện
+                            trí tuệ, trang phục trang trọng
                           </p>
                         </div>
                       </div>
@@ -1138,19 +1216,19 @@ export default function WorkerOnboardingPage() {
                     onClick={() => setCurrentStep(1)}
                     className="flex-1"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Quay lại
+                    <ArrowLeft className="mr-2 h-4 w-4 shrink-0" />
+                    <span>Quay lại</span>
                   </Button>
                   <Button type="submit" disabled={saving} className="flex-1">
                     {saving ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Đang lưu...
+                        <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin" />
+                        <span>Đang lưu...</span>
                       </>
                     ) : (
                       <>
-                        Tiếp theo
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <span>Tiếp theo</span>
+                        <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
                       </>
                     )}
                   </Button>
@@ -1208,13 +1286,16 @@ export default function WorkerOnboardingPage() {
                           Đặt Giá Cho Từng Dịch Vụ
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                          Mỗi dịch vụ có thể có mức giá khác nhau. Vui lòng nhập giá
-                          cho từng dịch vụ bạn đã chọn.
+                          Mỗi dịch vụ có thể có mức giá khác nhau. Vui lòng nhập
+                          giá cho từng dịch vụ bạn đã chọn.
                         </p>
                       </div>
 
                       {step2Data.service_categories.map((category) => {
-                        const categoryNames: Record<AssistanceCategory, string> = {
+                        const categoryNames: Record<
+                          AssistanceCategory,
+                          string
+                        > = {
                           personal_assist: "Hỗ Trợ Cá Nhân",
                           professional_onsite_assist: "Hỗ Trợ Chuyên Nghiệp",
                           virtual_assist: "Hỗ Trợ Từ Xa",
@@ -1280,7 +1361,10 @@ export default function WorkerOnboardingPage() {
                                     </SelectTrigger>
                                     <SelectContent>
                                       {[2, 3, 4, 5, 6, 8].map((hours) => (
-                                        <SelectItem key={hours} value={hours.toString()}>
+                                        <SelectItem
+                                          key={hours}
+                                          value={hours.toString()}
+                                        >
                                           {hours} hours
                                         </SelectItem>
                                       ))}
@@ -1311,7 +1395,9 @@ export default function WorkerOnboardingPage() {
                                       {CURRENCIES.find(
                                         (c) => c.code === step3Data.currency
                                       )?.symbol || "$"}
-                                      {calculateMonthlyRate(pricing.hourly_rate)}
+                                      {calculateMonthlyRate(
+                                        pricing.hourly_rate
+                                      )}
                                     </p>
                                   </div>
                                 </div>
@@ -1329,7 +1415,8 @@ export default function WorkerOnboardingPage() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <Label>
-                          Giá Theo Giờ <span className="text-destructive">*</span>
+                          Giá Theo Giờ{" "}
+                          <span className="text-destructive">*</span>
                         </Label>
                         <Input
                           type="number"
@@ -1349,7 +1436,8 @@ export default function WorkerOnboardingPage() {
 
                       <div className="space-y-2">
                         <Label>
-                          Số Giờ Đặt Tối Thiểu <span className="text-destructive">*</span>
+                          Số Giờ Đặt Tối Thiểu{" "}
+                          <span className="text-destructive">*</span>
                         </Label>
                         <Select
                           value={step3Data.min_booking_hours.toString()}
@@ -1383,8 +1471,9 @@ export default function WorkerOnboardingPage() {
                                 Giá Theo Ngày (8 giờ)
                               </p>
                               <p className="mt-1 text-lg font-semibold">
-                                {CURRENCIES.find((c) => c.code === step3Data.currency)
-                                  ?.symbol || "$"}
+                                {CURRENCIES.find(
+                                  (c) => c.code === step3Data.currency
+                                )?.symbol || "$"}
                                 {calculateDailyRate(step3Data.hourly_rate)}
                               </p>
                             </div>
@@ -1394,8 +1483,9 @@ export default function WorkerOnboardingPage() {
                                 Giá Theo Tháng (160 giờ)
                               </p>
                               <p className="mt-1 text-lg font-semibold">
-                                {CURRENCIES.find((c) => c.code === step3Data.currency)
-                                  ?.symbol || "$"}
+                                {CURRENCIES.find(
+                                  (c) => c.code === step3Data.currency
+                                )?.symbol || "$"}
                                 {calculateMonthlyRate(step3Data.hourly_rate)}
                               </p>
                             </div>
@@ -1426,8 +1516,8 @@ export default function WorkerOnboardingPage() {
                     onClick={() => setCurrentStep(2)}
                     className="flex-1"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Quay lại
+                    <ArrowLeft className="mr-2 h-4 w-4 shrink-0" />
+                    <span>Quay lại</span>
                   </Button>
                   <Button
                     type="submit"
@@ -1437,13 +1527,13 @@ export default function WorkerOnboardingPage() {
                   >
                     {saving ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Đang lưu...
+                        <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin" />
+                        <span>Đang lưu...</span>
                       </>
                     ) : (
                       <>
-                        <Check className="mr-2 h-4 w-4" />
-                        Hoàn tất
+                        <Check className="mr-2 h-4 w-4 shrink-0" />
+                        <span>Hoàn tất</span>
                       </>
                     )}
                   </Button>

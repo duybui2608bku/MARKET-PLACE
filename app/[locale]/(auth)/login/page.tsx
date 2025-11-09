@@ -50,9 +50,9 @@ export default function LoginPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild className="w-full" size="lg">
-              <Link href={`/${locale}`}>
-                <Home className="mr-2 h-4 w-4" />
-                Về trang chủ
+              <Link href={`/${locale}`} className="flex items-center justify-center">
+                <Home className="mr-2 h-4 w-4 shrink-0" />
+                <span>Về trang chủ</span>
               </Link>
             </Button>
           </CardFooter>
