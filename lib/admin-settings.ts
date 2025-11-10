@@ -77,7 +77,10 @@ export async function getAdminSettings(): Promise<AdminSettings | null> {
  * Get admin settings server-side (for Next.js server components and API routes)
  */
 export async function getAdminSettingsServer(): Promise<AdminSettings | null> {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
     console.error("Supabase environment variables not found");
     return null;
   }
@@ -109,8 +112,14 @@ export async function updateAdminSettingsServer(
   settings: Partial<AdminSettings>,
   userId: string
 ): Promise<{ success: boolean; error?: string }> {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { success: false, error: "Supabase environment variables not found" };
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return {
+      success: false,
+      error: "Supabase environment variables not found",
+    };
   }
 
   const supabase = createSupabaseClient(
@@ -162,7 +171,10 @@ export async function updateAdminSettingsServer(
  * Check if user is admin (server-side)
  */
 export async function isUserAdminServer(userId: string): Promise<boolean> {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
     return false;
   }
 

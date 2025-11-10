@@ -15,7 +15,13 @@ import {
 import { useT, useLocale } from "@/i18n/provider";
 import { AvailabilityCalendar } from "@/components/AvailabilityCalendar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -117,7 +123,9 @@ export default function WorkerProfilePage() {
   if (!profile || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background pt-16">
-        <p className="text-muted-foreground">{t("WorkerProfile.profileNotFound")}</p>
+        <p className="text-muted-foreground">
+          {t("WorkerProfile.profileNotFound")}
+        </p>
       </div>
     );
   }
@@ -128,22 +136,26 @@ export default function WorkerProfilePage() {
         {/* Header Actions */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">
-              {t("WorkerProfile.title")}
-            </h1>
+            <h1 className="text-3xl font-bold">{t("WorkerProfile.title")}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {t("WorkerProfile.subtitle")}
             </p>
           </div>
           <div className="flex gap-3">
             <Button variant="outline" asChild>
-              <Link href={`/${locale}/worker/${user.id}`} className="flex items-center">
+              <Link
+                href={`/${locale}/worker/${user.id}`}
+                className="flex items-center"
+              >
                 <Eye className="mr-2 h-4 w-4 shrink-0" />
                 <span>{t("WorkerProfile.viewPublicProfile")}</span>
               </Link>
             </Button>
             <Button asChild>
-              <Link href={`/${locale}/worker-onboarding`} className="flex items-center">
+              <Link
+                href={`/${locale}/worker-onboarding`}
+                className="flex items-center"
+              >
                 <Edit className="mr-2 h-4 w-4 shrink-0" />
                 <span>{t("WorkerProfile.editFullProfile")}</span>
               </Link>
@@ -215,7 +227,10 @@ export default function WorkerProfilePage() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-6">
                   <Avatar className="h-24 w-24 border-4">
-                    <AvatarImage src={user.avatar_url || ""} alt={user.full_name || "Worker"} />
+                    <AvatarImage
+                      src={user.avatar_url || ""}
+                      alt={user.full_name || "Worker"}
+                    />
                     <AvatarFallback className="text-2xl">
                       {user.full_name?.[0]?.toUpperCase() || "W"}
                     </AvatarFallback>
@@ -236,7 +251,8 @@ export default function WorkerProfilePage() {
                           <span>•</span>
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            {profile.experience_years}+ {t("WorkerProfile.yearsExperience")}
+                            {profile.experience_years}+{" "}
+                            {t("WorkerProfile.yearsExperience")}
                           </span>
                         </>
                       )}
@@ -257,7 +273,9 @@ export default function WorkerProfilePage() {
                       >
                         <span
                           className={`h-2 w-2 rounded-full ${
-                            profile.available ? "bg-green-400" : "bg-muted-foreground"
+                            profile.available
+                              ? "bg-green-400"
+                              : "bg-muted-foreground"
                           }`}
                         />
                         {profile.available
@@ -276,10 +294,15 @@ export default function WorkerProfilePage() {
             </Card>
 
             {/* Personal Info */}
-            {(profile.age || profile.height || profile.weight || profile.zodiac_sign) && (
+            {(profile.age ||
+              profile.height ||
+              profile.weight ||
+              profile.zodiac_sign) && (
               <Card>
                 <CardHeader>
-                  <CardTitle>{t("WorkerProfile.personalInformation")}</CardTitle>
+                  <CardTitle>
+                    {t("WorkerProfile.personalInformation")}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -309,7 +332,9 @@ export default function WorkerProfilePage() {
                     )}
                     {profile.zodiac_sign && (
                       <div className="text-center">
-                        <p className="text-2xl font-bold">{profile.zodiac_sign}</p>
+                        <p className="text-2xl font-bold">
+                          {profile.zodiac_sign}
+                        </p>
                         <p className="text-sm text-muted-foreground">
                           {t("WorkerProfile.zodiac")}
                         </p>
@@ -325,8 +350,8 @@ export default function WorkerProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    {t("WorkerProfile.gallery")} ({profile.gallery_images.length}{" "}
-                    {t("WorkerProfile.photos")})
+                    {t("WorkerProfile.gallery")} (
+                    {profile.gallery_images.length} {t("WorkerProfile.photos")})
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -363,7 +388,9 @@ export default function WorkerProfilePage() {
                     <h4 className="mb-2 font-medium">
                       {t("WorkerProfile.experience")}
                     </h4>
-                    <p className="text-sm text-muted-foreground">{profile.bio}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.bio}
+                    </p>
                   </div>
                 )}
                 {profile.lifestyle && (
@@ -371,14 +398,18 @@ export default function WorkerProfilePage() {
                     <h4 className="mb-2 font-medium">
                       {t("WorkerProfile.lifestyle")}
                     </h4>
-                    <p className="text-sm text-muted-foreground">{profile.lifestyle}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.lifestyle}
+                    </p>
                   </div>
                 )}
                 {profile.favorite_quote && (
                   <>
                     <Separator />
                     <div className="rounded-lg border-l-4 border-primary bg-muted p-4">
-                      <p className="text-sm italic">"{profile.favorite_quote}"</p>
+                      <p className="text-sm italic">
+                        &quot;{profile.favorite_quote}&quot;
+                      </p>
                     </div>
                   </>
                 )}
@@ -428,7 +459,8 @@ export default function WorkerProfilePage() {
             {/* Pricing Card */}
             {(() => {
               const services =
-                profile.service_categories && profile.service_categories.length > 0
+                profile.service_categories &&
+                profile.service_categories.length > 0
                   ? profile.service_categories
                   : profile.service_category
                   ? [profile.service_category]
@@ -511,7 +543,9 @@ export default function WorkerProfilePage() {
                                 )}
                                 {pricing.min_booking_hours > 0 && (
                                   <p className="mt-2 text-xs text-muted-foreground">
-                                    {t("WorkerProfile.minimumBookingHours").replace(
+                                    {t(
+                                      "WorkerProfile.minimumBookingHours"
+                                    ).replace(
                                       "{hours}",
                                       pricing.min_booking_hours.toString()
                                     )}
@@ -528,7 +562,10 @@ export default function WorkerProfilePage() {
                                 {t("WorkerProfile.hourly")}
                               </span>
                               <span className="text-lg font-bold">
-                                {formatCurrency(profile.hourly_rate, profile.currency)}
+                                {formatCurrency(
+                                  profile.hourly_rate,
+                                  profile.currency
+                                )}
                               </span>
                             </div>
                             {profile.daily_rate && (
@@ -537,7 +574,10 @@ export default function WorkerProfilePage() {
                                   {t("WorkerProfile.daily")}
                                 </span>
                                 <span className="text-lg font-bold">
-                                  {formatCurrency(profile.daily_rate, profile.currency)}
+                                  {formatCurrency(
+                                    profile.daily_rate,
+                                    profile.currency
+                                  )}
                                 </span>
                               </div>
                             )}
@@ -547,7 +587,10 @@ export default function WorkerProfilePage() {
                                   {t("WorkerProfile.monthly")}
                                 </span>
                                 <span className="text-lg font-bold">
-                                  {formatCurrency(profile.monthly_rate, profile.currency)}
+                                  {formatCurrency(
+                                    profile.monthly_rate,
+                                    profile.currency
+                                  )}
                                 </span>
                               </div>
                             )}
@@ -611,7 +654,9 @@ export default function WorkerProfilePage() {
                       <span className="text-muted-foreground">
                         {t("WorkerProfile.level")}:
                       </span>
-                      <span className="font-medium">Level {profile.service_level}</span>
+                      <span className="font-medium">
+                        Level {profile.service_level}
+                      </span>
                     </div>
                   )}
                 </CardContent>
@@ -624,14 +669,28 @@ export default function WorkerProfilePage() {
                 <CardTitle>{t("WorkerProfile.quickActions")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" asChild className="w-full justify-start">
-                  <Link href={`/${locale}/worker-onboarding`} className="flex items-center">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="w-full justify-start"
+                >
+                  <Link
+                    href={`/${locale}/worker-onboarding`}
+                    className="flex items-center"
+                  >
                     <Edit className="mr-2 h-4 w-4 shrink-0" />
                     <span>{t("WorkerProfile.editProfile")}</span>
                   </Link>
                 </Button>
-                <Button variant="outline" asChild className="w-full justify-start">
-                  <Link href={`/${locale}/worker/${user.id}`} className="flex items-center">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="w-full justify-start"
+                >
+                  <Link
+                    href={`/${locale}/worker/${user.id}`}
+                    className="flex items-center"
+                  >
                     <Eye className="mr-2 h-4 w-4 shrink-0" />
                     <span>{t("WorkerProfile.viewPublicProfile")}</span>
                   </Link>

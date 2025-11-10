@@ -14,6 +14,10 @@ import {
   Menu,
   ChevronDown,
   ChevronRight,
+  UserCog,
+  Briefcase,
+  Calendar,
+  Flag,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -38,6 +42,32 @@ export default function AdminSidebar() {
       key: "dashboard",
       icon: <LayoutDashboard className="w-5 h-5 shrink-0" />,
       href: `/${locale}/admin`,
+    },
+    {
+      key: "userManagement",
+      icon: <UserCog className="w-5 h-5 shrink-0" />,
+      children: [
+        {
+          key: "workers",
+          icon: <Briefcase className="w-4 h-4 shrink-0" />,
+          href: `/${locale}/admin/workers`,
+        },
+        {
+          key: "clients",
+          icon: <Users className="w-4 h-4 shrink-0" />,
+          href: `/${locale}/admin/clients`,
+        },
+      ],
+    },
+    {
+      key: "bookings",
+      icon: <Calendar className="w-5 h-5 shrink-0" />,
+      href: `/${locale}/admin/bookings`,
+    },
+    {
+      key: "reports",
+      icon: <Flag className="w-5 h-5 shrink-0" />,
+      href: `/${locale}/admin/reports`,
     },
     {
       key: "settings",
@@ -141,7 +171,7 @@ export default function AdminSidebar() {
           {/* Submenu */}
           {isExpanded && !isCollapsed && (
             <ul className="mt-1 ml-4 space-y-1">
-              {item.children.map((child) => (
+              {item?.children?.map((child) => (
                 <li key={child.key}>
                   <Link
                     href={child.href!}
@@ -174,9 +204,7 @@ export default function AdminSidebar() {
         >
           {item.icon}
           {!isCollapsed && (
-            <span className="font-medium">
-              {t(`admin.menu.${item.key}`)}
-            </span>
+            <span className="font-medium">{t(`admin.menu.${item.key}`)}</span>
           )}
         </Link>
       </li>
@@ -223,7 +251,9 @@ export default function AdminSidebar() {
           title={isCollapsed ? t("admin.backToSite") : undefined}
         >
           <Home className="w-4 h-4" />
-          {!isCollapsed && <span className="text-sm">{t("admin.backToSite")}</span>}
+          {!isCollapsed && (
+            <span className="text-sm">{t("admin.backToSite")}</span>
+          )}
         </Link>
       </div>
     </aside>

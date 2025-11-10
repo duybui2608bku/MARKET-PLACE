@@ -318,6 +318,11 @@
     "backToSite": "Quay lại trang web",
     "menu": {
       "dashboard": "Tổng Quan",
+      "userManagement": "Quản Lý Người Dùng",
+      "workers": "Người Lao Động",
+      "clients": "Khách Hàng",
+      "bookings": "Đặt Lịch",
+      "reports": "Báo Cáo",
       "settings": "Cài Đặt",
       "seo": "SEO",
       "branding": "Thương Hiệu",

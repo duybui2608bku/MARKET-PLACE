@@ -318,6 +318,11 @@
     "backToSite": "Back to site",
     "menu": {
       "dashboard": "Dashboard",
+      "userManagement": "User Management",
+      "workers": "Workers",
+      "clients": "Clients",
+      "bookings": "Bookings",
+      "reports": "Reports",
       "settings": "Settings",
       "seo": "SEO",
       "branding": "Branding",
