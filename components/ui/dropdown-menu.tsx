@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { Check, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -22,14 +23,15 @@ const DropdownMenu = ({ children }: { children: React.ReactNode }) => {
 
 const DropdownMenuTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ onClick, ...props }, ref) => {
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+>(({ onClick, asChild = false, ...props }, ref) => {
   const context = React.useContext(DropdownMenuContext)
+  const Comp = asChild ? Slot : "button"
 
   return (
-    <button
+    <Comp
       ref={ref}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(e)
         context?.onOpenChange(!context.open)
       }}
@@ -71,19 +73,20 @@ DropdownMenuContent.displayName = "DropdownMenuContent"
 
 const DropdownMenuItem = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, onClick, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
+>(({ className, onClick, asChild = false, ...props }, ref) => {
   const context = React.useContext(DropdownMenuContext)
+  const Comp = asChild ? Slot : "div"
 
   return (
-    <div
+    <Comp
       ref={ref}
       role="menuitem"
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLDivElement>) => {
         onClick?.(e)
         context?.onOpenChange(false)
       }}

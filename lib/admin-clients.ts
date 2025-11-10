@@ -443,7 +443,7 @@ export async function issueWarningToClient(
     // Get current warning count
     const { data: user, error: fetchError } = await supabase
       .from('users')
-      .select('warning_count')
+      .select('warning_count, admin_notes')
       .eq('id', clientId)
       .single()
 

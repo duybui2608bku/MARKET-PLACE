@@ -28,7 +28,7 @@ import {
   Settings,
   LogOut,
   Menu,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 
 export default function Header() {
@@ -38,8 +38,6 @@ export default function Header() {
   const router = useRouter();
   const supabase = getSupabaseClient();
   const [theme, setTheme] = useState<"light" | "dark" | null>(null);
-  const [showLangMenu, setShowLangMenu] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -92,7 +90,6 @@ export default function Header() {
     try {
       await supabase.auth.signOut();
       setUser(null);
-      setShowUserMenu(false);
       router.push(`/${locale || "vi"}`);
     } catch (error) {
       console.error("Error signing out:", error);
@@ -137,7 +134,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 z-50 w-full border-b border-[#E4D6C9]/50 bg-white/95 backdrop-blur-md shadow-sm">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo - Left Side */}
@@ -148,7 +145,7 @@ export default function Header() {
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-lg">M</span>
             </div>
-            <span className="text-xl font-bold text-foreground hidden sm:inline-block">
+            <span className="text-xl font-bold text-primary hidden sm:inline-block">
               MarketPlace
             </span>
           </Link>
@@ -172,15 +169,13 @@ export default function Header() {
             </Button>
 
             {/* Language Switcher */}
-            <DropdownMenu open={showLangMenu} onOpenChange={setShowLangMenu}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1 rounded-full">
-                  <Globe className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    {locale?.toUpperCase() || "EN"}
-                  </span>
-                  <ChevronDown className="h-3 w-3 opacity-50" />
-                </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="inline-flex items-center justify-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+                <Globe className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  {locale?.toUpperCase() || "EN"}
+                </span>
+                <ChevronDown className="h-3 w-3 opacity-50" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 {SUPPORTED_LOCALES.map((loc) => (
@@ -201,7 +196,7 @@ export default function Header() {
               <div className="h-10 w-24 animate-pulse rounded-full bg-muted" />
             ) : user ? (
               // User Menu (when logged in)
-              <DropdownMenu open={showUserMenu} onOpenChange={setShowUserMenu}>
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
@@ -233,7 +228,9 @@ export default function Header() {
                         {user.email}
                       </p>
                       <Badge
-                        variant={user.role === "admin" ? "default" : "secondary"}
+                        variant={
+                          user.role === "admin" ? "default" : "secondary"
+                        }
                         className="w-fit mt-1"
                       >
                         {user.role === "worker"
@@ -278,7 +275,12 @@ export default function Header() {
             ) : (
               // Sign In & Get Started buttons (when not logged in)
               <>
-                <Button variant="ghost" size="sm" asChild className="rounded-full">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="rounded-full"
+                >
                   <Link href={`/${locale || "vi"}/login`}>
                     {t("Header.signIn", "Sign In")}
                   </Link>
@@ -370,7 +372,10 @@ export default function Header() {
                         className="w-full justify-start"
                         asChild
                       >
-                        <Link href={`/${locale || "vi"}/profile/${user.role}`} className="flex items-center">
+                        <Link
+                          href={`/${locale || "vi"}/profile/${user.role}`}
+                          className="flex items-center"
+                        >
                           <UserIcon className="mr-2 h-4 w-4 shrink-0" />
                           <span>{t("Header.myProfile", "My Profile")}</span>
                         </Link>
@@ -381,7 +386,10 @@ export default function Header() {
                           className="w-full justify-start text-primary"
                           asChild
                         >
-                          <Link href={`/${locale || "vi"}/admin`} className="flex items-center">
+                          <Link
+                            href={`/${locale || "vi"}/admin`}
+                            className="flex items-center"
+                          >
                             <Settings className="mr-2 h-4 w-4 shrink-0" />
                             <span>{t("Header.adminPanel", "Admin Panel")}</span>
                           </Link>

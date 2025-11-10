@@ -10,7 +10,7 @@ const adminSecret = process.env.ADMIN_SECRET as string | undefined
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Admin authentication
@@ -21,7 +21,7 @@ export async function POST(
       }
     }
 
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
     const { admin_id, admin_email, worker_name } = body
 

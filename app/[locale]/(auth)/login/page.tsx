@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { useT, useLocale } from "@/i18n/provider";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LogIn, CheckCircle2, AlertCircle, Home } from "lucide-react";
+import { LogIn, CheckCircle2, Home } from "lucide-react";
 
 export default function LoginPage() {
   const supabase = getSupabaseClient();
@@ -20,7 +21,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check if already logged in
@@ -64,7 +64,6 @@ export default function LoginPage() {
   async function handleEmailLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -73,15 +72,17 @@ export default function LoginPage() {
       });
 
       if (signInError) {
-        setError(signInError.message);
+        toast.error(t("Auth.loginError"), signInError.message);
+        setLoading(false);
         return;
       }
 
+      toast.success(t("Auth.loginSuccess"), t("Auth.redirecting"));
+      
       // Redirect to home page after successful login
       router.push(`/${locale}`);
     } catch {
-      setError(t("Auth.unknownError"));
-    } finally {
+      toast.error(t("Auth.loginError"), t("Auth.unknownError"));
       setLoading(false);
     }
   }
@@ -109,14 +110,6 @@ export default function LoginPage() {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            {/* Error Message */}
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
             {/* Login Form */}
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">

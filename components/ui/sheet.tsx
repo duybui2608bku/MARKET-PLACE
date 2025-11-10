@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -33,14 +34,15 @@ const Sheet = ({
 
 const SheetTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ onClick, ...props }, ref) => {
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+>(({ onClick, asChild = false, ...props }, ref) => {
   const context = React.useContext(SheetContext)
+  const Comp = asChild ? Slot : "button"
 
   return (
-    <button
+    <Comp
       ref={ref}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(e)
         context?.onOpenChange(true)
       }}

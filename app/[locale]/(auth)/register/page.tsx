@@ -5,18 +5,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { useT, useLocale } from "@/i18n/provider";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import {
   Briefcase,
   Users,
   CheckCircle2,
-  AlertCircle,
   ArrowRight,
   ArrowLeft,
   Home,
@@ -36,8 +35,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check if already logged in
@@ -81,13 +78,11 @@ export default function RegisterPage() {
   async function handleEmailRegister(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!selectedRole) {
-      setError(t("Auth.selectRoleError"));
+      toast.error(t("Auth.selectRoleError"));
       return;
     }
 
     setLoading(true);
-    setError(null);
-    setMessage(null);
 
     try {
       // 1. Đăng ký user với Supabase Auth
@@ -104,7 +99,8 @@ export default function RegisterPage() {
       });
 
       if (signUpError) {
-        setError(signUpError.message);
+        toast.error(t("Auth.signupError") || "Registration failed", signUpError.message);
+        setLoading(false);
         return;
       }
 
@@ -143,13 +139,18 @@ export default function RegisterPage() {
 
         // Show appropriate success message
         if (profileCreated) {
-          setMessage(t("Auth.signupSuccess"));
+          toast.success(t("Auth.signupSuccess"), t("Auth.checkEmail"));
         } else {
-          setMessage(
+          toast.success(
+            t("Auth.signupSuccess"),
             t("Auth.signupSuccessWithNote") ||
               "Account created! Please check your email to verify your account."
           );
         }
+
+        setEmail("");
+        setPassword("");
+        setPhone("");
 
         // Redirect workers to onboarding
         if (selectedRole === "worker") {
@@ -158,15 +159,11 @@ export default function RegisterPage() {
           }, 2000);
         }
       } else {
-        setMessage(t("Auth.signupSuccess"));
+        toast.success(t("Auth.signupSuccess"));
       }
-
-      setEmail("");
-      setPassword("");
-      setPhone("");
     } catch (err) {
       console.error("Registration error:", err);
-      setError(t("Auth.unknownError"));
+      toast.error(t("Auth.signupError") || "Registration failed", t("Auth.unknownError"));
     } finally {
       setLoading(false);
     }
@@ -174,12 +171,11 @@ export default function RegisterPage() {
 
   async function handleGoogle() {
     if (!selectedRole) {
-      setError(t("Auth.selectRoleError"));
+      toast.error(t("Auth.selectRoleError"));
       return;
     }
 
     setLoading(true);
-    setError(null);
     try {
       const redirectTo =
         typeof window !== "undefined"
@@ -198,11 +194,11 @@ export default function RegisterPage() {
 
       if (oauthError) {
         console.error("OAuth error:", oauthError);
-        setError(oauthError.message);
+        toast.error(t("Auth.oauthError"), oauthError.message);
       }
     } catch (err) {
       console.error("Google OAuth failed:", err);
-      setError(t("Auth.oauthError"));
+      toast.error(t("Auth.oauthError"));
     } finally {
       setLoading(false);
     }
@@ -211,13 +207,10 @@ export default function RegisterPage() {
   function handleRoleSelect(role: UserRole) {
     setSelectedRole(role);
     setStep("details");
-    setError(null);
   }
 
   function handleBackToRoleSelection() {
     setStep("role");
-    setError(null);
-    setMessage(null);
   }
 
   if (step === "role") {
@@ -526,17 +519,6 @@ export default function RegisterPage() {
               {t("Auth.fillDetails")}
             </p>
           </div>
-
-          {message ? (
-            <div className="mb-4 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900/40 dark:bg-green-900/20 dark:text-green-200">
-              {message}
-            </div>
-          ) : null}
-          {error ? (
-            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-200">
-              {error}
-            </div>
-          ) : null}
 
           <form onSubmit={handleEmailRegister} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">

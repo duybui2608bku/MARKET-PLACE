@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/server";
 
 export interface AdminSettings {
   id: string;
@@ -112,84 +113,77 @@ export async function updateAdminSettingsServer(
   settings: Partial<AdminSettings>,
   userId: string
 ): Promise<{ success: boolean; error?: string }> {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
+  try {
+    // Use admin client to bypass RLS for checking user role
+    const supabase = createAdminClient();
+
+    // Check if user is admin
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+
+    if (userError || userData?.role !== "admin") {
+      return { success: false, error: "Unauthorized - Admin access required" };
+    }
+
+    // Get the first (and only) settings record
+    const { data: existingSettings } = await supabase
+      .from("admin_settings")
+      .select("id")
+      .limit(1)
+      .single();
+
+    if (!existingSettings) {
+      return { success: false, error: "Settings not found" };
+    }
+
+    // Update settings
+    const { error: updateError } = await supabase
+      .from("admin_settings")
+      .update({
+        ...settings,
+        updated_at: new Date().toISOString(),
+        updated_by: userId,
+      })
+      .eq("id", existingSettings.id);
+
+    if (updateError) {
+      console.error("Error updating admin settings:", updateError);
+      return { success: false, error: updateError.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating admin settings:", error);
     return {
       success: false,
-      error: "Supabase environment variables not found",
+      error:
+        error instanceof Error ? error.message : "Failed to update settings",
     };
   }
-
-  const supabase = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  // Check if user is admin
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", userId)
-    .single();
-
-  if (userError || userData?.role !== "admin") {
-    return { success: false, error: "Unauthorized - Admin access required" };
-  }
-
-  // Get the first (and only) settings record
-  const { data: existingSettings } = await supabase
-    .from("admin_settings")
-    .select("id")
-    .limit(1)
-    .single();
-
-  if (!existingSettings) {
-    return { success: false, error: "Settings not found" };
-  }
-
-  // Update settings
-  const { error: updateError } = await supabase
-    .from("admin_settings")
-    .update({
-      ...settings,
-      updated_at: new Date().toISOString(),
-      updated_by: userId,
-    })
-    .eq("id", existingSettings.id);
-
-  if (updateError) {
-    console.error("Error updating admin settings:", updateError);
-    return { success: false, error: updateError.message };
-  }
-
-  return { success: true };
 }
 
 /**
  * Check if user is admin (server-side)
  */
 export async function isUserAdminServer(userId: string): Promise<boolean> {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
+  try {
+    // Use admin client to bypass RLS for checking user role
+    const supabase = createAdminClient();
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+
+    if (error || !data) return false;
+
+    return data.role === "admin";
+  } catch (error) {
+    console.error("Error checking admin status:", error);
     return false;
   }
-
-  const supabase = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  const { data, error } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", userId)
-    .single();
-
-  if (error || !data) return false;
-
-  return data.role === "admin";
 }

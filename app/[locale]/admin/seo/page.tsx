@@ -14,21 +14,21 @@ export default function SEOSettingsPage() {
     >
       {(settings, updateSettings) => (
         <>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-foreground">
               {t("admin.seo.siteTitle")}
             </label>
             <input
               type="text"
               value={settings.site_title || ""}
               onChange={(e) => updateSettings({ site_title: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 border-2 border-border hover:border-primary/30 focus:border-primary rounded-xl focus:ring-4 focus:ring-primary/10 dark:bg-gray-800/50 bg-white transition-all duration-200 text-foreground placeholder:text-muted-foreground"
               placeholder="MarketPlace"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-foreground">
               {t("admin.seo.siteDescription")}
             </label>
             <textarea
@@ -36,14 +36,14 @@ export default function SEOSettingsPage() {
               onChange={(e) =>
                 updateSettings({ site_description: e.target.value })
               }
-              rows={3}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              rows={4}
+              className="w-full px-4 py-3 border-2 border-border hover:border-primary/30 focus:border-primary rounded-xl focus:ring-4 focus:ring-primary/10 dark:bg-gray-800/50 bg-white transition-all duration-200 text-foreground placeholder:text-muted-foreground resize-none"
               placeholder="Connect workers with employers"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-foreground">
               {t("admin.seo.siteKeywords")}
             </label>
             <input
@@ -52,7 +52,7 @@ export default function SEOSettingsPage() {
               onChange={(e) =>
                 updateSettings({ site_keywords: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 border-2 border-border hover:border-primary/30 focus:border-primary rounded-xl focus:ring-4 focus:ring-primary/10 dark:bg-gray-800/50 bg-white transition-all duration-200 text-foreground placeholder:text-muted-foreground"
               placeholder="marketplace, workers, jobs, hiring"
             />
           </div>

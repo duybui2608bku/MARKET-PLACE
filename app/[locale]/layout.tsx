@@ -4,6 +4,7 @@ import "../globals.css";
 import { I18nProvider } from "@/i18n/provider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/toaster";
 import { getAdminSettingsServer } from "@/lib/admin-settings";
 
 const geistSans = Geist({
@@ -70,12 +71,13 @@ export default async function LocaleLayout({
         )}
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-white`}
       >
         <I18nProvider locale={locale} messages={messages}>
           <Header />
-          <main className="pt-16 flex-grow">{children}</main>
+          <main className="flex-grow">{children}</main>
           <Footer />
+          <Toaster />
         </I18nProvider>
       </body>
     </html>

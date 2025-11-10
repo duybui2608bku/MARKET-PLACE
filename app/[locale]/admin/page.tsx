@@ -1,6 +1,7 @@
 "use client";
 
 import { useT, useLocale } from "@/i18n/provider";
+import { toast } from "@/lib/toast";
 import {
   LayoutDashboard,
   Users,
@@ -77,7 +78,6 @@ export default function AdminDashboard() {
   const locale = useLocale();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -99,7 +99,8 @@ export default function AdminDashboard() {
       const data = await response.json();
       setStats(data.stats);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load statistics");
+      const errorMsg = err instanceof Error ? err.message : "Failed to load statistics";
+      toast.error("Error loading dashboard", errorMsg);
     } finally {
       setLoading(false);
     }
@@ -117,52 +118,45 @@ export default function AdminDashboard() {
     icon: any;
     color: string;
     trend?: string;
-  }) => (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <p className="text-sm text-gray-600 dark:text-gray-400">{title}</p>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-              {value}
-            </p>
-            {trend && (
-              <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                {trend}
+  }) => {
+    const getColorClasses = () => {
+      const colors: Record<string, string> = {
+        blue: "bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/10 text-blue-600 dark:text-blue-400",
+        green: "bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/10 text-green-600 dark:text-green-400",
+        purple: "bg-gradient-to-br from-purple-50 to-purple-100/50 dark:from-purple-900/20 dark:to-purple-800/10 text-purple-600 dark:text-purple-400",
+        orange: "bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-900/20 dark:to-orange-800/10 text-orange-600 dark:text-orange-400",
+        primary: "bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 text-primary dark:text-primary",
+      };
+      return colors[color] || colors.primary;
+    };
+
+    return (
+      <Card className="group hover:shadow-xl transition-all duration-300 border-border/40 bg-gradient-to-br from-white to-accent/20 dark:from-gray-900 dark:to-gray-800 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <CardContent className="p-6 relative">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-muted-foreground mb-3">
+                {title}
               </p>
-            )}
+              <p className="text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
+                {value}
+              </p>
+              {trend && (
+                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  {trend}
+                </p>
+              )}
+            </div>
+            <div className={`p-3.5 rounded-2xl shadow-lg ${getColorClasses()} group-hover:scale-110 transition-transform`}>
+              <Icon className="w-6 h-6" />
+            </div>
           </div>
-          <div
-            className={`p-3 rounded-lg ${
-              color === "blue"
-                ? "bg-blue-100 dark:bg-blue-900/20"
-                : color === "green"
-                ? "bg-green-100 dark:bg-green-900/20"
-                : color === "purple"
-                ? "bg-purple-100 dark:bg-purple-900/20"
-                : color === "orange"
-                ? "bg-orange-100 dark:bg-orange-900/20"
-                : "bg-gray-100 dark:bg-gray-700"
-            }`}
-          >
-            <Icon
-              className={`w-6 h-6 ${
-                color === "blue"
-                  ? "text-blue-600 dark:text-blue-400"
-                  : color === "green"
-                  ? "text-green-600 dark:text-green-400"
-                  : color === "purple"
-                  ? "text-purple-600 dark:text-purple-400"
-                  : color === "orange"
-                  ? "text-orange-600 dark:text-orange-400"
-                  : "text-gray-600 dark:text-gray-400"
-              }`}
-            />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </CardContent>
+      </Card>
+    );
+  };
 
   if (loading) {
     return (
@@ -180,47 +174,53 @@ export default function AdminDashboard() {
     );
   }
 
-  if (error) {
+  if (!stats) {
     return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Failed to load dashboard statistics</p>
+        </div>
+      </div>
     );
   }
 
-  if (!stats) return null;
-
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Admin Dashboard
-        </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Marketplace overview and management center
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-2">
+            Admin Dashboard
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Marketplace overview and management center
+          </p>
+        </div>
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-border/40 shadow-sm">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-sm text-muted-foreground">Live</span>
+        </div>
       </div>
 
       {/* Pending Actions Alert */}
       {(stats.workers.pending > 0 || stats.reports.pending > 0) && (
-        <Alert className="mb-6 border-orange-200 bg-orange-50 dark:bg-orange-900/10">
-          <AlertCircle className="h-4 w-4 text-orange-600" />
-          <AlertDescription className="text-orange-800 dark:text-orange-200">
-            You have {stats.workers.pending} pending worker approvals and{" "}
-            {stats.reports.pending} pending reports requiring attention.
+        <Alert className="border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-orange-50/50 dark:from-orange-900/20 dark:to-orange-900/10 shadow-lg">
+          <AlertCircle className="h-5 w-5 text-orange-600" />
+          <AlertDescription className="text-orange-900 dark:text-orange-200 font-medium">
+            ⚡ You have <strong>{stats.workers.pending}</strong> pending worker approvals and{" "}
+            <strong>{stats.reports.pending}</strong> pending reports requiring attention.
           </AlertDescription>
         </Alert>
       )}
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Users"
           value={stats.users.total}
           icon={Users}
-          color="blue"
+          color="primary"
           trend={`+${stats.recentActivity.newWorkersToday + stats.recentActivity.newEmployersToday} today`}
         />
         <StatCard
@@ -247,7 +247,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Secondary Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Active Workers"
           value={stats.workers.active}
@@ -270,14 +270,14 @@ export default function AdminDashboard() {
           title="Average Rating"
           value={stats.reviews.averageRating.toFixed(1)}
           icon={TrendingUp}
-          color="purple"
+          color="primary"
         />
       </div>
 
       {/* Detailed Stats Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Worker Status */}
-        <Card>
+        <Card className="border-border/40 bg-gradient-to-br from-white to-accent/20 dark:from-gray-900 dark:to-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Briefcase className="w-5 h-5" />

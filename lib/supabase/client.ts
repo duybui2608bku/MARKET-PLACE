@@ -34,7 +34,7 @@ let cachedClient: ReturnType<typeof createBrowserClient> | null = null;
 
 export function getSupabaseClient() {
   if (!cachedClient) {
-    cachedClient = createBrowserClient(supabaseUrl, supabaseAnonKey);
+    cachedClient = createBrowserClient(supabaseUrl!, supabaseAnonKey!);
   }
   return cachedClient;
 }

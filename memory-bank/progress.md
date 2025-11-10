@@ -275,9 +275,42 @@
 
 ---
 
-## 🔧 Recent Fixes (November 9, 2025)
+## 🔧 Recent Fixes & Updates
 
-### Authentication Pages - Logged-in User Redirect Fix
+### Homepage Color Scheme Update (November 10, 2025)
+
+**Update:** Complete design refresh with warm burgundy & beige color palette
+
+**Changes Applied:**
+- ✅ Updated global CSS variables with new color system
+- ✅ Header: Beige background (#E4D6C9) with burgundy branding
+- ✅ Footer: Burgundy background (#690F0F) with white/beige text
+- ✅ Homepage sections: Consistent warm color palette throughout
+- ✅ Buttons: Primary burgundy (#690F0F), Secondary dusty pink (#D7B4BA)
+- ✅ Text colors: Dark brown (#3B2B2B) for body, muted brown (#9C7E7E) for sub text
+- ✅ Card backgrounds: White or light beige (#EDE2DE)
+
+**New Color Palette:**
+- Primary: #690F0F (Burgundy)
+- Primary Hover: #7B1818
+- Secondary: #D7B4BA (Dusty Pink)
+- Secondary Hover: #C09AA6
+- Accent/Header: #E4D6C9 (Beige)
+- Body Text: #3B2B2B (Dark Brown)
+- Sub Text: #9C7E7E (Muted Brown)
+- Card BG: #FFFFFF or #EDE2DE
+
+**Files Modified:**
+- `app/globals.css`
+- `components/Header.tsx`
+- `components/Footer.tsx`
+- `app/[locale]/page.tsx`
+
+**Result:** Professional, cohesive design with warm, inviting color palette that improves brand recognition and visual hierarchy.
+
+---
+
+### Authentication Pages - Logged-in User Redirect Fix (November 9, 2025)
 
 **Issue:** Người dùng đã đăng nhập vẫn có thể truy cập trang `/register` và `/login`
 

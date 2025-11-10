@@ -5,7 +5,16 @@ import { useT, useLocale } from "@/i18n/provider";
 import { useEffect, useState } from "react";
 import { AdminSettings } from "@/lib/admin-settings";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Youtube,
+} from "lucide-react";
 
 export default function Footer() {
   const t = useT();
@@ -27,7 +36,8 @@ export default function Footer() {
 
   const currentYear = new Date().getFullYear();
   const footerText =
-    settings?.footer_text || `© ${currentYear} MarketPlace. All rights reserved.`;
+    settings?.footer_text ||
+    `© ${currentYear} MarketPlace. All rights reserved.`;
 
   const socialLinks = [
     {
@@ -59,10 +69,10 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t bg-background mt-auto"
+      className="border-t border-[#690F0F] bg-[#690F0F] mt-auto text-white"
       style={{
-        backgroundColor: settings?.footer_bg_color || undefined,
-        color: settings?.footer_text_color || undefined,
+        backgroundColor: settings?.footer_bg_color || "#690F0F",
+        color: settings?.footer_text_color || "#FFFFFF",
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -78,16 +88,16 @@ export default function Footer() {
                 />
               ) : (
                 <>
-                  <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-                    <span className="text-white font-bold text-lg">M</span>
+                  <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center shadow-sm">
+                    <span className="text-[#690F0F] font-bold text-lg">M</span>
                   </div>
-                  <span className="text-xl font-bold text-foreground">
+                  <span className="text-xl font-bold text-white">
                     {settings?.logo_text || "MarketPlace"}
                   </span>
                 </>
               )}
             </div>
-            <p className="text-sm text-muted-foreground max-w-xs">
+            <p className="text-sm text-[#E4D6C9] max-w-xs">
               {settings?.site_description ||
                 t("Footer.description", "Connect workers with employers")}
             </p>
@@ -101,7 +111,7 @@ export default function Footer() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="h-9 w-9 rounded-full border bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center transition-colors"
+                      className="h-9 w-9 rounded-full border border-white/20 bg-white/10 hover:bg-white hover:text-[#690F0F] inline-flex items-center justify-center transition-colors"
                       aria-label={social.name}
                     >
                       <social.icon className="h-4 w-4" />
@@ -113,14 +123,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
+            <h3 className="font-semibold text-white mb-4">
               {t("Footer.quickLinks", "Quick Links")}
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href={`/${locale || "vi"}`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover:underline"
+                  className="text-sm text-[#E4D6C9] hover:text-white transition-colors inline-block hover:underline"
                 >
                   {t("Footer.home", "Home")}
                 </Link>
@@ -128,7 +138,7 @@ export default function Footer() {
               <li>
                 <Link
                   href={settings?.about_url || `/${locale || "vi"}/about`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover:underline"
+                  className="text-sm text-[#E4D6C9] hover:text-white transition-colors inline-block hover:underline"
                 >
                   {t("Footer.about", "About Us")}
                 </Link>
@@ -136,7 +146,7 @@ export default function Footer() {
               <li>
                 <Link
                   href={`/${locale || "vi"}/register`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover:underline"
+                  className="text-sm text-[#E4D6C9] hover:text-white transition-colors inline-block hover:underline"
                 >
                   {t("Footer.getStarted", "Get Started")}
                 </Link>
@@ -146,14 +156,14 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
+            <h3 className="font-semibold text-white mb-4">
               {t("Footer.legal", "Legal")}
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href={settings?.privacy_url || `/${locale || "vi"}/privacy`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover:underline"
+                  className="text-sm text-[#E4D6C9] hover:text-white transition-colors inline-block hover:underline"
                 >
                   {t("Footer.privacy", "Privacy Policy")}
                 </Link>
@@ -161,7 +171,7 @@ export default function Footer() {
               <li>
                 <Link
                   href={settings?.terms_url || `/${locale || "vi"}/terms`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover:underline"
+                  className="text-sm text-[#E4D6C9] hover:text-white transition-colors inline-block hover:underline"
                 >
                   {t("Footer.terms", "Terms of Service")}
                 </Link>
@@ -171,16 +181,16 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
+            <h3 className="font-semibold text-white mb-4">
               {t("Footer.contact", "Contact")}
             </h3>
             <ul className="space-y-3">
               {settings?.contact_email && (
                 <li className="flex items-start gap-2">
-                  <Mail className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <Mail className="h-4 w-4 text-[#E4D6C9] mt-0.5 flex-shrink-0" />
                   <a
                     href={`mailto:${settings.contact_email}`}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:underline"
+                    className="text-sm text-[#E4D6C9] hover:text-white transition-colors hover:underline"
                   >
                     {settings.contact_email}
                   </a>
@@ -188,10 +198,10 @@ export default function Footer() {
               )}
               {settings?.contact_phone && (
                 <li className="flex items-start gap-2">
-                  <Phone className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <Phone className="h-4 w-4 text-[#E4D6C9] mt-0.5 flex-shrink-0" />
                   <a
                     href={`tel:${settings.contact_phone}`}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:underline"
+                    className="text-sm text-[#E4D6C9] hover:text-white transition-colors hover:underline"
                   >
                     {settings.contact_phone}
                   </a>
@@ -199,8 +209,8 @@ export default function Footer() {
               )}
               {settings?.contact_address && (
                 <li className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 text-[#E4D6C9] mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-[#E4D6C9]">
                     {settings.contact_address}
                   </span>
                 </li>
@@ -213,13 +223,13 @@ export default function Footer() {
         {settings?.custom_footer_links &&
           settings.custom_footer_links.length > 0 && (
             <>
-              <Separator className="my-8" />
+              <Separator className="my-8 bg-white/20" />
               <div className="flex flex-wrap gap-4 justify-center">
                 {settings.custom_footer_links.map((link, index) => (
                   <Link
                     key={index}
                     href={link.url}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:underline"
+                    className="text-sm text-[#E4D6C9] hover:text-white transition-colors hover:underline"
                   >
                     {link.label}
                   </Link>
@@ -229,10 +239,8 @@ export default function Footer() {
           )}
 
         {/* Copyright */}
-        <Separator className="my-8" />
-        <p className="text-center text-sm text-muted-foreground">
-          {footerText}
-        </p>
+        <Separator className="my-8 bg-white/20" />
+        <p className="text-center text-sm text-[#E4D6C9]">{footerText}</p>
       </div>
     </footer>
   );

@@ -699,7 +699,7 @@ export async function getRatingDistribution(
     }
 
     const distribution: RatingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    data.forEach((review) => {
+    data.forEach((review: { rating: number }) => {
       if (review.rating >= 1 && review.rating <= 5) {
         distribution[review.rating as keyof RatingDistribution]++;
       }

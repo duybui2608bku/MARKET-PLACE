@@ -2,6 +2,7 @@
 
 import { useState, useEffect, ReactNode } from "react";
 import { useT } from "@/i18n/provider";
+import { toast } from "@/lib/toast";
 import { AdminSettings } from "@/lib/admin-settings";
 import { useRouter } from "next/navigation";
 
@@ -22,10 +23,6 @@ export default function AdminSettingsForm({
   const [settings, setSettings] = useState<Partial<AdminSettings>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   useEffect(() => {
     fetchSettings();
@@ -45,7 +42,6 @@ export default function AdminSettingsForm({
 
   async function handleSave() {
     setSaving(true);
-    setMessage(null);
 
     try {
       const response = await fetch("/api/admin/settings", {
@@ -57,23 +53,14 @@ export default function AdminSettingsForm({
       const result = await response.json();
 
       if (result.success) {
-        setMessage({
-          type: "success",
-          text: t("admin.saveSuccess"),
-        });
+        toast.success(t("admin.saveSuccess"), t("admin.settingsUpdated") || "Settings have been updated successfully");
         setSettings(result.data);
       } else {
-        setMessage({
-          type: "error",
-          text: result.error || t("admin.saveError"),
-        });
+        toast.error(t("admin.saveError"), result.error || t("admin.saveFailed"));
       }
     } catch (error) {
       console.error("Error saving settings:", error);
-      setMessage({
-        type: "error",
-        text: t("admin.saveError"),
-      });
+      toast.error(t("admin.saveError"), t("admin.networkError") || "Failed to save settings");
     } finally {
       setSaving(false);
     }
@@ -92,50 +79,39 @@ export default function AdminSettingsForm({
   }
 
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          {title}
-        </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">{subtitle}</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-2">
+            {title}
+          </h1>
+          <p className="text-muted-foreground text-lg">{subtitle}</p>
+        </div>
       </div>
 
-      {/* Message */}
-      {message && (
-        <div
-          className={`mb-6 p-4 rounded-lg ${
-            message.type === "success"
-              ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800"
-              : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800"
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
-
       {/* Form */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <div className="p-6 space-y-6">
+      <div className="bg-gradient-to-br from-white to-accent/20 dark:from-gray-900 dark:to-gray-800 rounded-2xl border border-border/40 shadow-xl overflow-hidden">
+        <div className="p-8 space-y-8">
           {children(settings, updateSettings)}
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+        <div className="px-8 py-6 bg-accent/30 dark:bg-gray-800/50 border-t border-border/40 flex justify-end gap-4">
           <button
             onClick={() => router.back()}
-            className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="px-6 py-3 border-2 border-border hover:border-primary/50 text-foreground hover:text-primary rounded-xl hover:bg-accent/50 transition-all duration-200 font-medium"
           >
             {t("admin.cancel")}
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-8 py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-3 font-medium"
           >
             {saving && (
               <svg
-                className="animate-spin h-4 w-4"
+                className="animate-spin h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
               >

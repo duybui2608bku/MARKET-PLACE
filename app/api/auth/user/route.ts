@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getSupabaseWithBearer } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,7 +11,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseWithBearer(authorization);
+    // Extract the bearer token from the authorization header
+    const token = authorization.replace("Bearer ", "");
+    const supabase = createClient(token);
     const { data, error } = await supabase.auth.getUser();
     if (error || !data?.user) {
       return Response.json(

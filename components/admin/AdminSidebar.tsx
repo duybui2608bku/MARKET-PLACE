@@ -12,12 +12,14 @@ import {
   Share2,
   Home,
   Menu,
+  X,
   ChevronDown,
   ChevronRight,
   UserCog,
   Briefcase,
   Calendar,
   Flag,
+  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -146,42 +148,46 @@ export default function AdminSidebar() {
         <li key={item.key}>
           <button
             onClick={() => toggleMenu(item.key)}
-            className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
               active
-                ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                ? "bg-gradient-to-r from-primary/10 to-primary/5 text-primary shadow-sm"
+                : "text-foreground/70 hover:text-primary hover:bg-accent/50"
             }`}
           >
             <div className="flex items-center gap-3">
-              {item.icon}
+              <div className={`transition-transform group-hover:scale-110 ${active ? "text-primary" : ""}`}>
+                {item.icon}
+              </div>
               {!isCollapsed && (
-                <span className="font-medium">
+                <span className="font-medium text-sm">
                   {t(`admin.menu.${item.key}`)}
                 </span>
               )}
             </div>
             {!isCollapsed &&
               (isExpanded ? (
-                <ChevronDown className="w-4 h-4 shrink-0" />
+                <ChevronDown className="w-4 h-4 shrink-0 transition-transform" />
               ) : (
-                <ChevronRight className="w-4 h-4 shrink-0" />
+                <ChevronRight className="w-4 h-4 shrink-0 transition-transform" />
               ))}
           </button>
 
           {/* Submenu */}
           {isExpanded && !isCollapsed && (
-            <ul className="mt-1 ml-4 space-y-1">
+            <ul className="mt-1.5 ml-4 space-y-1 border-l-2 border-accent pl-3">
               {item?.children?.map((child) => (
                 <li key={child.key}>
                   <Link
                     href={child.href!}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors text-sm ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm group ${
                       isActive(child.href!)
-                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        ? "bg-primary/5 text-primary font-medium shadow-sm"
+                        : "text-foreground/60 hover:text-primary hover:bg-accent/30 hover:pl-4"
                     }`}
                   >
-                    {child.icon}
+                    <div className={`transition-all ${isActive(child.href!) ? "text-primary" : ""}`}>
+                      {child.icon}
+                    </div>
                     <span>{t(`admin.menu.${child.key}`)}</span>
                   </Link>
                 </li>
@@ -196,15 +202,17 @@ export default function AdminSidebar() {
       <li key={item.key}>
         <Link
           href={item.href!}
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
             active
-              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              ? "bg-gradient-to-r from-primary/10 to-primary/5 text-primary shadow-sm font-medium"
+              : "text-foreground/70 hover:text-primary hover:bg-accent/50 hover:shadow-sm"
           }`}
         >
-          {item.icon}
+          <div className={`transition-transform group-hover:scale-110 ${active ? "text-primary" : ""}`}>
+            {item.icon}
+          </div>
           {!isCollapsed && (
-            <span className="font-medium">{t(`admin.menu.${item.key}`)}</span>
+            <span className="font-medium text-sm">{t(`admin.menu.${item.key}`)}</span>
           )}
         </Link>
       </li>
@@ -212,50 +220,75 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside
-      className={`${
-        isCollapsed ? "w-20" : "w-64"
-      } min-h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed left-0 top-0 transition-all duration-300 z-50`}
-    >
-      {/* Logo/Brand with Toggle */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
-        {!isCollapsed && (
-          <Link href={`/${locale}`} className="flex items-center gap-2">
-            <Home className="w-6 h-6 text-blue-600" />
-            <span className="font-bold text-lg">Admin Panel</span>
-          </Link>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isCollapsed ? "mx-auto" : ""
-          }`}
-          aria-label="Toggle sidebar"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      </div>
+    <>
+      {/* Overlay for mobile */}
+      {!isCollapsed && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsCollapsed(true)}
+        />
+      )}
 
-      {/* Navigation Menu */}
-      <nav className="p-4">
-        <ul className="space-y-1">{menuItems.map(renderMenuItem)}</ul>
-      </nav>
-
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
-        <Link
-          href={`/${locale}`}
-          className={`flex items-center ${
-            isCollapsed ? "justify-center" : "gap-2"
-          } px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700`}
-          title={isCollapsed ? t("admin.backToSite") : undefined}
-        >
-          <Home className="w-4 h-4" />
+      {/* Sidebar */}
+      <aside
+        className={`${
+          isCollapsed ? "w-20" : "w-72"
+        } min-h-screen bg-gradient-to-b from-white to-accent/30 dark:from-gray-900 dark:to-gray-800 border-r border-border/40 fixed left-0 top-0 transition-all duration-300 z-50 shadow-xl`}
+      >
+        {/* Logo/Brand with Toggle */}
+        <div className="h-20 flex items-center justify-between px-6 border-b border-border/40 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
           {!isCollapsed && (
-            <span className="text-sm">{t("admin.backToSite")}</span>
+            <Link href={`/${locale}`} className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg group-hover:blur-xl transition-all" />
+                <div className="relative bg-gradient-to-br from-primary to-primary/80 p-2.5 rounded-xl shadow-lg">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Admin Panel
+                </span>
+                <span className="text-xs text-muted-foreground">Dashboard</span>
+              </div>
+            </Link>
           )}
-        </Link>
-      </div>
-    </aside>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={`p-2.5 rounded-xl hover:bg-accent transition-all duration-200 hover:scale-110 ${
+              isCollapsed ? "mx-auto" : ""
+            }`}
+            aria-label="Toggle sidebar"
+          >
+            {isCollapsed ? (
+              <Menu className="w-5 h-5 text-primary" />
+            ) : (
+              <X className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
+            )}
+          </button>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav className="p-4 overflow-y-auto" style={{ height: "calc(100vh - 160px)" }}>
+          <ul className="space-y-1.5">{menuItems.map(renderMenuItem)}</ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border/40 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+          <Link
+            href={`/${locale}`}
+            className={`flex items-center ${
+              isCollapsed ? "justify-center" : "gap-3"
+            } px-4 py-3 text-muted-foreground hover:text-primary transition-all duration-200 rounded-xl hover:bg-accent group`}
+            title={isCollapsed ? t("admin.backToSite") : undefined}
+          >
+            <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            {!isCollapsed && (
+              <span className="text-sm font-medium">{t("admin.backToSite")}</span>
+            )}
+          </Link>
+        </div>
+      </aside>
+    </>
   );
 }

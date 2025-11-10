@@ -10,7 +10,7 @@ const adminSecret = process.env.ADMIN_SECRET as string | undefined
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Admin authentication
@@ -21,7 +21,7 @@ export async function GET(
       }
     }
 
-    const { id } = params
+    const { id } = await params
     const result = await getClientById(id)
 
     if (!result.success) {
@@ -46,7 +46,7 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Admin authentication
@@ -57,7 +57,7 @@ export async function PUT(
       }
     }
 
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
 
     // Separate profile updates from admin notes

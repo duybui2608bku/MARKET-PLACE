@@ -44,120 +44,120 @@
 }
 
 :root {
-  /* Airbnb-inspired Design System */
+  /* Warm Burgundy & Beige Design System */
   --radius: 0.75rem;
 
-  /* Base colors - Clean whites and grays */
-  --background: oklch(1 0 0); /* Pure white */
-  --foreground: oklch(0.2 0.01 0); /* Almost black */
+  /* Base colors - Warm beige tones */
+  --background: #ffffff; /* Pure white */
+  --foreground: #3b2b2b; /* Dark brown for body text */
 
   /* Card colors */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.01 0);
+  --card: #ffffff; /* White or #EDE2DE for cards */
+  --card-foreground: #3b2b2b;
 
   /* Popover colors */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.01 0);
+  --popover: #ffffff;
+  --popover-foreground: #3b2b2b;
 
-  /* Primary - Airbnb signature red/pink #FF5A5F */
-  --primary: oklch(0.62 0.22 15);
-  --primary-foreground: oklch(1 0 0);
+  /* Primary - Burgundy #690F0F */
+  --primary: #690f0f;
+  --primary-foreground: #ffffff;
 
-  /* Secondary - Elegant gray */
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0.01 0);
+  /* Secondary - Dusty pink #D7B4BA */
+  --secondary: #d7b4ba;
+  --secondary-foreground: #690f0f;
 
-  /* Muted - Subtle gray for backgrounds */
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0.01 0);
+  /* Muted - Light beige for backgrounds */
+  --muted: #ede2de;
+  --muted-foreground: #9c7e7e; /* Muted brown for sub text */
 
-  /* Accent - Lighter version of primary */
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.2 0.01 0);
+  /* Accent - Warm beige */
+  --accent: #e4d6c9;
+  --accent-foreground: #690f0f;
 
   /* Destructive - Error red */
-  --destructive: oklch(0.55 0.25 25);
+  --destructive: #c53030;
 
-  /* Borders and inputs - Very light gray */
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.9 0 0);
+  /* Borders and inputs - Light beige */
+  --border: #e4d6c9;
+  --input: #e4d6c9;
 
-  /* Focus ring - Primary color */
-  --ring: oklch(0.62 0.22 15);
+  /* Focus ring - Primary burgundy */
+  --ring: #690f0f;
 
-  /* Chart colors - Vibrant and modern */
-  --chart-1: oklch(0.62 0.22 15); /* Primary red */
-  --chart-2: oklch(0.55 0.15 200); /* Teal */
-  --chart-3: oklch(0.65 0.18 280); /* Purple */
-  --chart-4: oklch(0.7 0.2 85); /* Yellow */
-  --chart-5: oklch(0.6 0.2 140); /* Green */
+  /* Chart colors - Warm tones */
+  --chart-1: #690f0f; /* Primary burgundy */
+  --chart-2: #d7b4ba; /* Dusty pink */
+  --chart-3: #9c7e7e; /* Muted brown */
+  --chart-4: #e4d6c9; /* Light beige */
+  --chart-5: #c09aa6; /* Medium pink */
 
   /* Sidebar colors */
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.2 0.01 0);
-  --sidebar-primary: oklch(0.62 0.22 15);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.2 0.01 0);
-  --sidebar-border: oklch(0.9 0 0);
-  --sidebar-ring: oklch(0.62 0.22 15);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #3b2b2b;
+  --sidebar-primary: #690f0f;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e4d6c9;
+  --sidebar-accent-foreground: #690f0f;
+  --sidebar-border: #e4d6c9;
+  --sidebar-ring: #690f0f;
 }
 
 .dark {
-  /* Dark mode - Modern and elegant */
-  --background: oklch(0.15 0.01 0); /* Very dark gray */
-  --foreground: oklch(0.95 0 0); /* Off-white */
+  /* Dark mode - Warm burgundy tones */
+  --background: #1a1414; /* Dark burgundy-brown */
+  --foreground: #e4d6c9; /* Light beige text */
 
   /* Card colors */
-  --card: oklch(0.2 0.01 0);
-  --card-foreground: oklch(0.95 0 0);
+  --card: #2a1f1f;
+  --card-foreground: #e4d6c9;
 
   /* Popover colors */
-  --popover: oklch(0.2 0.01 0);
-  --popover-foreground: oklch(0.95 0 0);
+  --popover: #2a1f1f;
+  --popover-foreground: #e4d6c9;
 
-  /* Primary - Lighter version for dark mode */
-  --primary: oklch(0.68 0.22 15);
-  --primary-foreground: oklch(1 0 0);
+  /* Primary - Lighter burgundy for dark mode */
+  --primary: #7b1818;
+  --primary-foreground: #ffffff;
 
   /* Secondary */
-  --secondary: oklch(0.25 0.01 0);
-  --secondary-foreground: oklch(0.95 0 0);
+  --secondary: #c09aa6;
+  --secondary-foreground: #1a1414;
 
   /* Muted */
-  --muted: oklch(0.25 0.01 0);
-  --muted-foreground: oklch(0.6 0 0);
+  --muted: #3b2b2b;
+  --muted-foreground: #c1a9a9;
 
   /* Accent */
-  --accent: oklch(0.25 0.01 0);
-  --accent-foreground: oklch(0.95 0 0);
+  --accent: #3b2b2b;
+  --accent-foreground: #e4d6c9;
 
   /* Destructive */
-  --destructive: oklch(0.6 0.25 25);
+  --destructive: #e53e3e;
 
   /* Borders and inputs */
-  --border: oklch(0.3 0 0);
-  --input: oklch(0.3 0 0);
+  --border: #3b2b2b;
+  --input: #3b2b2b;
 
   /* Focus ring */
-  --ring: oklch(0.68 0.22 15);
+  --ring: #7b1818;
 
-  /* Chart colors - Vibrant for dark mode */
-  --chart-1: oklch(0.68 0.22 15);
-  --chart-2: oklch(0.6 0.15 200);
-  --chart-3: oklch(0.7 0.18 280);
-  --chart-4: oklch(0.75 0.2 85);
-  --chart-5: oklch(0.65 0.2 140);
+  /* Chart colors - Warm tones for dark mode */
+  --chart-1: #7b1818;
+  --chart-2: #c09aa6;
+  --chart-3: #c1a9a9;
+  --chart-4: #9c7e7e;
+  --chart-5: #d7b4ba;
 
   /* Sidebar */
-  --sidebar: oklch(0.18 0.01 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.68 0.22 15);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.25 0.01 0);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(0.3 0 0);
-  --sidebar-ring: oklch(0.68 0.22 15);
+  --sidebar: #2a1f1f;
+  --sidebar-foreground: #e4d6c9;
+  --sidebar-primary: #7b1818;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #3b2b2b;
+  --sidebar-accent-foreground: #e4d6c9;
+  --sidebar-border: #3b2b2b;
+  --sidebar-ring: #7b1818;
 }
 
 @layer base {
@@ -172,6 +172,11 @@
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* JetBrains Mono font */
+  body {
+    font-family: "JetBrains Mono", monospace;
   }
 
   /* Custom scrollbar styling - Airbnb-like */

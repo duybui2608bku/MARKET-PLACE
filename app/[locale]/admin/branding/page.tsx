@@ -23,8 +23,8 @@ export default function BrandingSettingsPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-foreground">
               {t("admin.branding.logoText")}
             </label>
             <input
@@ -33,7 +33,7 @@ export default function BrandingSettingsPage() {
               onChange={(e) =>
                 updateSettings({ logo_text: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 border-2 border-border hover:border-primary/30 focus:border-primary rounded-xl focus:ring-4 focus:ring-primary/10 dark:bg-gray-800/50 bg-white transition-all duration-200 text-foreground placeholder:text-muted-foreground"
               placeholder="MarketPlace"
             />
           </div>
