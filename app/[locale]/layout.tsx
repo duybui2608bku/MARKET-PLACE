@@ -26,7 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: settings?.site_keywords || undefined,
     openGraph: {
       title: settings?.site_title || "MarketPlace",
-      description: settings?.site_description || "Connect workers with employers",
+      description:
+        settings?.site_description || "Connect workers with employers",
       images: settings?.og_image_url ? [settings.og_image_url] : undefined,
     },
   };
@@ -75,7 +76,7 @@ export default async function LocaleLayout({
       >
         <I18nProvider locale={locale} messages={messages}>
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow pt-16">{children}</main>
           <Footer />
           <Toaster />
         </I18nProvider>
